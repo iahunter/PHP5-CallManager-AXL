@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHP5-CallManager-AXL/CUCM.class.php
+ * php5-callmanager-axl/cucm.class.php
  *
  * This class connects to Cisco Call Manager via the AXL SOAP/XML interface
  *
