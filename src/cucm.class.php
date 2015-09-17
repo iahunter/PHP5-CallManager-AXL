@@ -26,9 +26,9 @@
  * @license   http://www.gnu.org/copyleft/lesser.html The GNU LESSER GENERAL PUBLIC LICENSE, Version 3.0
  */
 
-namespace PHP5-CallManager;
+namespace php5-callmanager-axl;
 
-class CUCM
+class cucm
 {
 	// PHP XML SOAP Client library instance connected to one specific callmanager
     public $SOAPCLIENT;
