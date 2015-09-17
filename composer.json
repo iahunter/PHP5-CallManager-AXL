@@ -1,0 +1,39 @@
+{
+    "name": "metaclassing/PHP5-CallManager-AXL",
+    "type": "library",
+    "description": "PHP Cisco CallManager AXL SOAP/XML Library",
+    "keywords": [
+        "php5",
+        "cisco",
+        "callmanager",
+        "call",
+        "manager",
+        "axl",
+        "voip"
+        ],
+    "homepage": "http://github.com/metaclassing/PHP5-CallManager-AXL",
+    "license": "LGPL3.0",
+    "authors": [
+        {
+            "name": "John.Lavoie",
+            "email": "metaclassing@github",
+            "role": "Developer"
+        },
+        {
+            "name": "Travis Riesenberg",
+            "email": "Travis.Riesenberg@github",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHP5-CallManager-AXL\\": "PHP5-CallManager-AXL/"
+        }
+    }
+}
