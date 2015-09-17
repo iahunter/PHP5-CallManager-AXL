@@ -26,7 +26,7 @@
  * @license   http://www.gnu.org/copyleft/lesser.html The GNU LESSER GENERAL PUBLIC LICENSE, Version 3.0
  */
 
-namespace php5-callmanager-axl;
+namespace CallmanagerAXL;
 
 class cucm
 {
