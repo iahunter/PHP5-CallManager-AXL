@@ -126,9 +126,9 @@ class Callmanager
     {
 		$SEARCH = $this->axl_search_return_array( ["devicePoolName" => "%"] , ["name" => ""] );
 		// Search the CUCM for all phones
-		$BASETIME = Utility::microtime_ticks();
+		$BASETIME = \\Utility::microtime_ticks();
 		$RETURN = $this->SOAPCLIENT->listPhone( $SEARCH );
-		$DIFFTIME = Utility::microtime_ticks() - $BASETIME;
+		$DIFFTIME = \\Utility::microtime_ticks() - $BASETIME;
 		// log our soap call
 		$this->log_soap_call("listPhone",$DIFFTIME,$SEARCH,$RETURN);
 		// Decode the reply into an array of results
@@ -142,9 +142,9 @@ class Callmanager
     public function get_phone_by_name($NAME)
     {
 		$SEARCH = [ "name" => $NAME ];
-		$BASETIME = Utility::microtime_ticks();
+		$BASETIME = \\Utility::microtime_ticks();
 		$RETURN = $this->SOAPCLIENT->getPhone( $SEARCH );
-		$DIFFTIME = Utility::microtime_ticks() - $BASETIME;
+		$DIFFTIME = \\Utility::microtime_ticks() - $BASETIME;
 		// log our soap call
 		$this->log_soap_call("getPhone",$DIFFTIME,$SEARCH,$RETURN);
 		// Decode the reply into an array of results
@@ -185,9 +185,9 @@ class Callmanager
     {
 		$SEARCH = $this->axl_search_return_array( ["name" => "%"] , ["name" => ""] );
 		// Search the CUCM for all device pools
-		$BASETIME = Utility::microtime_ticks();
+		$BASETIME = \\Utility::microtime_ticks();
 		$RETURN = $this->SOAPCLIENT->listDevicePool( $SEARCH );
-		$DIFFTIME = Utility::microtime_ticks() - $BASETIME;
+		$DIFFTIME = \\Utility::microtime_ticks() - $BASETIME;
 		// log our soap call
 		$this->log_soap_call("listDevicePool",$DIFFTIME,$SEARCH,$RETURN);
 		// Count our soap call
@@ -226,9 +226,9 @@ class Callmanager
 		$SEARCH = $this->axl_search_return_array( ["name" => "SRST_{$SITE}%"],
 												  ["name" => ""] );
 		// Search the CUCM for matching SRST devices
-		$BASETIME = Utility::microtime_ticks();
+		$BASETIME = \\Utility::microtime_ticks();
 		$RETURN = $this->SOAPCLIENT->listSrst( $SEARCH ); // listSrst
-		$DIFFTIME = Utility::microtime_ticks() - $BASETIME;
+		$DIFFTIME = \\Utility::microtime_ticks() - $BASETIME;
 		// log our soap call
 		$this->log_soap_call("listSrst",$DIFFTIME,$SEARCH,$RETURN);
 		// Decode the reply into an array of results
@@ -242,9 +242,9 @@ class Callmanager
 	{
 		$SEARCH = [ "name" => $NAME ];
 		// Search the CUCM for matching SRST devices
-		$BASETIME = Utility::microtime_ticks();
+		$BASETIME = \\Utility::microtime_ticks();
 		$RETURN = $this->SOAPCLIENT->getSrst( $SEARCH ); // getSrst
-		$DIFFTIME = Utility::microtime_ticks() - $BASETIME;
+		$DIFFTIME = \\Utility::microtime_ticks() - $BASETIME;
 		// log our soap call
 		$this->log_soap_call("getSrst",$DIFFTIME,$SEARCH,$RETURN);
 		// Decode the reply into an array of results
@@ -274,9 +274,9 @@ class Callmanager
 		$QUERY = [ "name" => "SRST_{$SITE}", "ipAddress" => $IP, "port" => 2000, "SipPort" => 5060 ];
 		$QUERY = $this->axl_add_query_array("srst", $QUERY);
 		// Add our new SRST router
-		$BASETIME = Utility::microtime_ticks();
+		$BASETIME = \\Utility::microtime_ticks();
 		$RETURN = $this->SOAPCLIENT->addSrst( $QUERY ); // addSrst
-		$DIFFTIME = Utility::microtime_ticks() - $BASETIME;
+		$DIFFTIME = \\Utility::microtime_ticks() - $BASETIME;
 		// log our soap call
 		$this->log_soap_call("addSrst",$DIFFTIME,$QUERY,$RETURN);
 		return $RETURN;
@@ -292,9 +292,9 @@ class Callmanager
 
 		$QUERY = [ "name" => $NAME ];
 		// Remove our SRST router
-		$BASETIME = Utility::microtime_ticks();
+		$BASETIME = \\Utility::microtime_ticks();
 		$RETURN = $this->SOAPCLIENT->removeSrst( $QUERY ); // removeSrst
-		$DIFFTIME = Utility::microtime_ticks() - $BASETIME;
+		$DIFFTIME = \\Utility::microtime_ticks() - $BASETIME;
 		// log our soap call
 		$this->log_soap_call("removeSrst",$DIFFTIME,$QUERY,$RETURN);
 		return $RETURN;
@@ -322,9 +322,9 @@ class Callmanager
 			}
 		}
 		// Update our SRST router
-		$BASETIME = Utility::microtime_ticks();
+		$BASETIME = \\Utility::microtime_ticks();
 		$RETURN = $this->SOAPCLIENT->updateSrst( $QUERY ); // updateSrst
-		$DIFFTIME = Utility::microtime_ticks() - $BASETIME;
+		$DIFFTIME = \\Utility::microtime_ticks() - $BASETIME;
 		// log our soap call
 		$this->log_soap_call("updateSrst",$DIFFTIME,$QUERY,$RETURN);
 		return $RETURN;
