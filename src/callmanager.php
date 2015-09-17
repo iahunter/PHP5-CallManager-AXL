@@ -1,7 +1,7 @@
 <?php
 
 /**
- * php5-callmanager-axl/cucm.class.php
+ * src/callmanager.php
  *
  * This class connects to Cisco Call Manager via the AXL SOAP/XML interface
  *
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * @category  default
- * @package   none
+ * @package   php5-callmanager-axl
  * @author    John Lavoie, Travis Riesenberg
  * @copyright 2015 @authors
  * @license   http://www.gnu.org/copyleft/lesser.html The GNU LESSER GENERAL PUBLIC LICENSE, Version 3.0
@@ -28,7 +28,7 @@
 
 namespace CallmanagerAXL;
 
-class cucm
+class Callmanager
 {
 	// PHP XML SOAP Client library instance connected to one specific callmanager
     public $SOAPCLIENT;
@@ -51,7 +51,7 @@ class cucm
                     "login"				=> $USERNAME,
                     "password"			=> $PASSWORD,
                    ];
-        $this->SOAPCLIENT	= new SoapClient($SCHEMA,$OPTIONS);
+        $this->SOAPCLIENT	= new \SoapClient($SCHEMA,$OPTIONS);
         $this->SOAPCALLS = array();
     }
 
