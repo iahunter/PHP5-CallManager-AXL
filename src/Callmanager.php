@@ -237,7 +237,7 @@ class Callmanager
 
     public function get_srst_routers_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "SRST_{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "SRST_{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -255,7 +255,7 @@ class Callmanager
 
     public function get_route_partitions_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -273,7 +273,7 @@ class Callmanager
 
     public function get_calling_search_spaces_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "CSS_{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "CSS_{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -291,7 +291,7 @@ class Callmanager
 
     public function get_locations_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "LOC_{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "LOC_{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -309,7 +309,7 @@ class Callmanager
 
     public function get_regions_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "R_{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "R_{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -325,10 +325,9 @@ class Callmanager
         return $RETURN;
     }
 
-
     public function get_callmanager_groups_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "CMG-{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "CMG-{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -346,7 +345,7 @@ class Callmanager
 
     public function get_device_pools_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "DP_{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "DP_{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -364,7 +363,7 @@ class Callmanager
 
     public function get_conference_bridges_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "{$SITE}%_CFB"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "{$SITE}%_CFB"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -382,7 +381,7 @@ class Callmanager
 
     public function get_media_termination_points_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "%{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "%{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -400,7 +399,7 @@ class Callmanager
 
     public function get_media_resource_groups_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "%{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "%{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -418,7 +417,7 @@ class Callmanager
 
     public function get_media_resource_group_lists_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "%{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "%{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -437,7 +436,7 @@ class Callmanager
     public function get_h323_gateways_by_site($SITE)
     {
         $SEARCH = $this->axl_search_return_array(['devicePoolName' => "%{$SITE}%"],
-                                                  ['name' => '']);
+                                                  ['name'          => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
         $RETURN = $this->SOAPCLIENT->listH323Gateway($SEARCH); // list
@@ -454,7 +453,7 @@ class Callmanager
 
     public function get_route_groups_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => "%{$SITE}%"],
+        $SEARCH = $this->axl_search_return_array(['name'  => "%{$SITE}%"],
                                                   ['name' => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
@@ -473,7 +472,7 @@ class Callmanager
     public function get_translation_patterns_by_site($SITE)
     {
         $SEARCH = $this->axl_search_return_array(['routePartitionName' => "%{$SITE}%"],
-                                                  ['pattern' => '']);
+                                                  ['pattern'           => '']);
         // Search the CUCM for matching SRST devices
         $BASETIME = \Utility::microtime_ticks();
         $RETURN = $this->SOAPCLIENT->listTransPattern($SEARCH); // list
