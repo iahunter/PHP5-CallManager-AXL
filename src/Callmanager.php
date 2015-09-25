@@ -235,257 +235,178 @@ class Callmanager
         return $SITES;
     }
 
+	// Generalized function to return any type of object using the list/search functionality for a site
+
+	public function get_object_type_by_site($SITE,$TYPE)
+	{
+		// Valid object types this function works for
+		$TYPES =[	'DevicePool',
+					'Srst',
+					'RoutePartition',
+					'Css',
+					'Location',
+					'Region',
+					'CallManagerGroup',
+					'DevicePool',
+					'ConferenceBridge',
+					'Mtp',
+					'MediaResourceGroup',
+					'MediaResourceList',
+					'H323Gateway',
+					'RouteGroup',
+					'TransPattern',
+				];
+		if ( !in_array($TYPE,$TYPES) ) {
+			throw new \Exception("Object type provided {$TYPE} is not supported");
+		}
+
+		//	This is the default search and return criteria for MOST object types. There are a few exceptions
+		$FIND = ['name' => "%{$SITE}%"];
+		$RETR = ['name' => ''];
+		// H323 Gateway search uses a different search name field
+		if ( $TYPE == "H323Gateway") {
+			$FIND = ['devicePoolName' => "%{$SITE}%"];
+		// So does translation pattern search and returns a different field
+		}elseif( $TYPE == "TransPattern" ){
+			$FIND = ['routePartitionName' => "%{$SITE}%"];
+			$RETR = ['pattern' => ''];
+		}
+		$SEARCH = $this->axl_search_return_array($FIND,$RETR);
+		/*	This is the list of functions to find the list of types:
+				list DevicePool($SEARCH);
+				list Srst($SEARCH);
+				list RoutePartition($SEARCH);
+				list Css($SEARCH);
+				list Location($SEARCH);
+				list Region($SEARCH);
+				list CallManagerGroup($SEARCH);
+				list DevicePool($SEARCH);
+				list ConferenceBridge($SEARCH);
+				list Mtp($SEARCH);
+				list MediaResourceGroup($SEARCH);
+				list MediaResourceList($SEARCH);
+				list H323Gateway($SEARCH);
+				list RouteGroup($SEARCH);
+				list TransPattern($SEARCH);
+		*/
+		$FUNCTION = 'list' . $TYPE;
+		// Search the CUCM for matching SRST devices
+		$BASETIME = \Utility::microtime_ticks();
+		$RETURN = $this->SOAPCLIENT->$FUNCTION($SEARCH);
+		$DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+		// log our soap call
+		$this->log_soap_call($FUNCTION, $DIFFTIME, $SEARCH, $RETURN);
+		// Decode the reply into an array of results
+		$RETURN = $this->decode_soap_reply($RETURN);
+		// Turn the associative arrays into a single simensional array list
+		$RETURN = $this->assoc_key_values_to_array($RETURN, reset(array_keys($RETR)) );
+		return $RETURN;
+	}
+
+	// These are just aliased functions to help people navigate the above generalized function
+
     public function get_srst_routers_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "SRST_{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listSrst($SEARCH); // listSrst
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listSrst', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'Srst');
     }
 
     public function get_route_partitions_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listRoutePartition($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listRoutePartition', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'RoutePartition');
     }
 
     public function get_calling_search_spaces_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "CSS_{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listCss($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listCss', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'Css');
     }
 
     public function get_locations_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "LOC_{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listLocation($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listLocation', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'Location');
     }
 
     public function get_regions_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "R_{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listRegion($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listRegion', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'Region');
     }
 
     public function get_callmanager_groups_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "CMG-{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listCallManagerGroup($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listCallManagerGroup', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'CallManagerGroup');
     }
 
     public function get_device_pools_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "DP_{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listDevicePool($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listDevicePool', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'DevicePool');
     }
 
     public function get_conference_bridges_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "{$SITE}%_CFB"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listConferenceBridge($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listConferenceBridge', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'ConferenceBridge');
     }
 
     public function get_media_termination_points_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "%{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listMtp($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listMtp', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'Mtp');
     }
 
     public function get_media_resource_groups_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "%{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listMediaResourceGroup($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listMediaResourceGroup', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'MediaResourceGroup');
     }
 
     public function get_media_resource_group_lists_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "%{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listMediaResourceList($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listMediaResourceList', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'MediaResourceList');
     }
 
     public function get_h323_gateways_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['devicePoolName' => "%{$SITE}%"],
-                                                  ['name'          => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listH323Gateway($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listH323Gateway', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'H323Gateway');
     }
 
     public function get_route_groups_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name'  => "%{$SITE}%"],
-                                                  ['name' => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listRouteGroup($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listRouteGroup', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'RouteGroup');
     }
 
     public function get_translation_patterns_by_site($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['routePartitionName' => "%{$SITE}%"],
-                                                  ['pattern'           => '']);
-        // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->listTransPattern($SEARCH); // list
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('listTransPattern', $DIFFTIME, $SEARCH, $RETURN);
-        // Decode the reply into an array of results
-        $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, 'pattern');
-
-        return $RETURN;
+		return $this->get_object_type_by_site($SITE,'TransPattern');
     }
+
+	// This returns an associative array for each of the above types
+
+	public function get_all_object_types_by_site($SITE)
+	{
+		// Valid object types this function works for
+		$TYPES =[	'DevicePool',
+					'Srst',
+					'RoutePartition',
+					'Css',
+					'Location',
+					'Region',
+					'CallManagerGroup',
+					'DevicePool',
+					'ConferenceBridge',
+					'Mtp',
+					'MediaResourceGroup',
+					'MediaResourceList',
+					'H323Gateway',
+					'RouteGroup',
+					'TransPattern',
+				];
+		$RETURN = array();
+		foreach ($TYPES as $TYPE) {
+			try {
+				$RETURN[$TYPE] = $this->get_object_type_by_site($SITE,$TYPE);
+			}catch (\Exception $E) {
+				// If we encounter a specific error getting one TYPE of thing, continue on to the NEXT type of thing
+				$RETURN[$TYPE] = [];
+			}
+		}
+		return $RETURN;
+	}
 
     public function get_srst_router_by_name($NAME)
     {
