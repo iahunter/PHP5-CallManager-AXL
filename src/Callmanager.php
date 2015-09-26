@@ -108,14 +108,14 @@ class Callmanager
         $RETURN = [];
         // Loop through the array of key=>value pairs
         foreach ($ASSOC as $KEY => $VALUE) {
-            if (isset($VALUE[$AKEY]) && $VALUE[$AKEY] !== "") {
-				if (isset($VALUE['uuid']) && $VALUE['uuid']) {
-					// If the query returns a UUID, use that as our array key!
-					$RETURN[$VALUE['uuid']] = $VALUE[$AKEY];
-				}else{
-					// If the query does NOT return a UUID, use sequencial keys
-	                array_push($RETURN, $VALUE[$AKEY]);
-				}
+            if (isset($VALUE[$AKEY]) && $VALUE[$AKEY] !== '') {
+                if (isset($VALUE['uuid']) && $VALUE['uuid']) {
+                    // If the query returns a UUID, use that as our array key!
+                    $RETURN[$VALUE['uuid']] = $VALUE[$AKEY];
+                } else {
+                    // If the query does NOT return a UUID, use sequencial keys
+                    array_push($RETURN, $VALUE[$AKEY]);
+                }
             } elseif ($STOPONERROR) {
                 throw new \Exception("Assoc array value does not have key {$KEY}");
             }
@@ -220,29 +220,31 @@ class Callmanager
         return $RETURN;
     }
 
-	// Manage the list of types valid for our generalized dosomething_objecttypexyz_bysomething($1,$2)
-	public function object_types()
-	{
-		// Valid object types this function works for
-		$TYPES =[	'Phone',
-					'DevicePool',
-					'Srst',
-					'RoutePartition',
-					'Css',
-					'Location',
-					'Region',
-					'CallManagerGroup',
-					'DevicePool',
-					'ConferenceBridge',
-					'Mtp',
-					'MediaResourceGroup',
-					'MediaResourceList',
-					'H323Gateway',
-					'RouteGroup',
-					'TransPattern',
-				];
-		return $TYPES;
-	}
+    // Manage the list of types valid for our generalized dosomething_objecttypexyz_bysomething($1,$2)
+
+    public function object_types()
+    {
+        // Valid object types this function works for
+        $TYPES = ['Phone',
+                    'DevicePool',
+                    'Srst',
+                    'RoutePartition',
+                    'Css',
+                    'Location',
+                    'Region',
+                    'CallManagerGroup',
+                    'DevicePool',
+                    'ConferenceBridge',
+                    'Mtp',
+                    'MediaResourceGroup',
+                    'MediaResourceList',
+                    'H323Gateway',
+                    'RouteGroup',
+                    'TransPattern',
+                ];
+
+        return $TYPES;
+    }
 
     // Get an array of site names
 
@@ -265,141 +267,146 @@ class Callmanager
         return $SITES;
     }
 
-	// LIST STUFF IN SITES
+    // LIST STUFF IN SITES
 
-	// Generalized function to return any type of object using the list/search functionality for a site
+    // Generalized function to return any type of object using the list/search functionality for a site
 
-	public function get_object_type_by_site($SITE,$TYPE)
-	{
-		// Get our valid object types
-		$TYPES = $this->object_types();
-		// Check to see if the one we were passed is valid for this function
-		if ( !in_array($TYPE,$TYPES) ) {
-			throw new \Exception("Object type provided {$TYPE} is not supported");
-		}
+    public function get_object_type_by_site($SITE, $TYPE)
+    {
+        // Get our valid object types
+        $TYPES = $this->object_types();
+        // Check to see if the one we were passed is valid for this function
+        if (!in_array($TYPE, $TYPES)) {
+            throw new \Exception("Object type provided {$TYPE} is not supported");
+        }
 
-		//	This is the default search and return criteria for MOST object types. There are a few exceptions
-		$FIND = ['name' => "%{$SITE}%"];
-		$RETR = ['name' => ''];
-		// Phone search uses a different search name field
-		if ( $TYPE == "Phone") {
-			$FIND = ['devicePoolName' => "%{$SITE}%"];
-		// H323 Gateway search uses a different search name field
-		}elseif ( $TYPE == "H323Gateway") {
-			$FIND = ['devicePoolName' => "%{$SITE}%"];
-		// So does translation pattern search and returns a different field
-		}elseif( $TYPE == "TransPattern" ){
-			$FIND = ['routePartitionName' => "%{$SITE}%"];
-			$RETR = ['pattern' => ''];
-		}
-		$SEARCH = $this->axl_search_return_array($FIND,$RETR);
-		$FUNCTION = 'list' . $TYPE;
-		// Search the CUCM for matching SRST devices
-		$BASETIME = \Utility::microtime_ticks();
-		$RETURN = $this->SOAPCLIENT->$FUNCTION($SEARCH);
-		$DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-		// log our soap call
-		$this->log_soap_call($FUNCTION, $DIFFTIME, $SEARCH, $RETURN);
-		// Decode the reply into an array of results
-		$RETURN = $this->decode_soap_reply($RETURN);
-		// Turn the associative arrays into a single simensional array list
-		$RETURN = $this->assoc_key_values_to_array($RETURN, reset(array_keys($RETR)) );
-		return $RETURN;
-	}
+        //	This is the default search and return criteria for MOST object types. There are a few exceptions
+        $FIND = ['name' => "%{$SITE}%"];
+        $RETR = ['name' => ''];
+        // Phone search uses a different search name field
+        if ($TYPE == 'Phone') {
+            $FIND = ['devicePoolName' => "%{$SITE}%"];
+        // H323 Gateway search uses a different search name field
+        } elseif ($TYPE == 'H323Gateway') {
+            $FIND = ['devicePoolName' => "%{$SITE}%"];
+        // So does translation pattern search and returns a different field
+        } elseif ($TYPE == 'TransPattern') {
+            $FIND = ['routePartitionName' => "%{$SITE}%"];
+            $RETR = ['pattern' => ''];
+        }
+        $SEARCH = $this->axl_search_return_array($FIND, $RETR);
+        $FUNCTION = 'list'.$TYPE;
+        // Search the CUCM for matching SRST devices
+        $BASETIME = \Utility::microtime_ticks();
+        $RETURN = $this->SOAPCLIENT->$FUNCTION($SEARCH);
+        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call($FUNCTION, $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN);
+        // Turn the associative arrays into a single simensional array list
+        $RETURN = $this->assoc_key_values_to_array($RETURN, reset(array_keys($RETR)));
 
-	// This returns an associative array for each of the above types
+        return $RETURN;
+    }
 
-	public function get_all_object_types_by_site($SITE)
-	{
-		// Get our valid object types
-		$TYPES = $this->object_types();
-		$RETURN = array();
-		foreach ($TYPES as $TYPE) {
-			// The last parameter is false for stop-on-error, we will NOT throw an exception but return a blank array element
-			$RETURN[$TYPE] = $this->get_object_type_by_site($SITE,$TYPE,false);
-		}
-		return $RETURN;
-	}
+    // This returns an associative array for each of the above types
 
-	public function get_all_object_type_details_by_site($SITE)
-	{
-		// Get our valid object types
-		$TYPES = $this->object_types();
-		$RETURN = array();
-		foreach ($TYPES as $TYPE) {
-			try {
-				$RETURN[$TYPE] = $this->get_object_type_by_site($SITE,$TYPE);
-				foreach($RETURN[$TYPE] as $INDEX => $NAME) {
-					unset($RETURN[$TYPE][$INDEX]);
-					$RETURN[$TYPE][$INDEX] = $this->get_object_type_by_uuid($INDEX,$TYPE);
-				}
-			}catch (\Exception $E) {
-				// If we encounter a specific error getting one TYPE of thing, continue on to the NEXT type of thing
-				$RETURN[$TYPE] = [];
-			}
-		}
-		return $RETURN;
-	}
+    public function get_all_object_types_by_site($SITE)
+    {
+        // Get our valid object types
+        $TYPES = $this->object_types();
+        $RETURN = [];
+        foreach ($TYPES as $TYPE) {
+            // The last parameter is false for stop-on-error, we will NOT throw an exception but return a blank array element
+            $RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE, false);
+        }
 
-	// GET DETAILED STUFF
+        return $RETURN;
+    }
 
-	public function get_object_type_by_name($NAME,$TYPE)
-	{
-		// Get our valid object types
-		$TYPES = $this->object_types();
-		// TransPattern is not valid for get-item-by-NAME, must use UUID or a combination of name and routepartitionname
-		$TYPES = array_diff($TYPES, ['TransPattern']);
-		// Check to see if the one we were passed is valid for this function
-		if ( !in_array($TYPE,$TYPES) ) {
-			throw new \Exception("Object type provided {$TYPE} is not supported");
-		}
+    public function get_all_object_type_details_by_site($SITE)
+    {
+        // Get our valid object types
+        $TYPES = $this->object_types();
+        $RETURN = [];
+        foreach ($TYPES as $TYPE) {
+            try {
+                $RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
+                foreach ($RETURN[$TYPE] as $INDEX => $NAME) {
+                    unset($RETURN[$TYPE][$INDEX]);
+                    $RETURN[$TYPE][$INDEX] = $this->get_object_type_by_uuid($INDEX, $TYPE);
+                }
+            } catch (\Exception $E) {
+                // If we encounter a specific error getting one TYPE of thing, continue on to the NEXT type of thing
+                $RETURN[$TYPE] = [];
+            }
+        }
 
-		$QUERY = ['name' => $NAME];
-		$FUNCTION = 'get' . $TYPE;
+        return $RETURN;
+    }
+
+    // GET DETAILED STUFF
+
+    public function get_object_type_by_name($NAME, $TYPE)
+    {
+        // Get our valid object types
+        $TYPES = $this->object_types();
+        // TransPattern is not valid for get-item-by-NAME, must use UUID or a combination of name and routepartitionname
+        $TYPES = array_diff($TYPES, ['TransPattern']);
+        // Check to see if the one we were passed is valid for this function
+        if (!in_array($TYPE, $TYPES)) {
+            throw new \Exception("Object type provided {$TYPE} is not supported");
+        }
+
+        $QUERY = ['name' => $NAME];
+        $FUNCTION = 'get'.$TYPE;
         $BASETIME = \Utility::microtime_ticks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
         $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
         $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
-		$RETURN = $this->decode_soap_reply($RETURN);
-		$RETURN = reset($RETURN);
+        $RETURN = $this->decode_soap_reply($RETURN);
+        $RETURN = reset($RETURN);
+
         return $RETURN;
-	}
+    }
 
-	public function get_object_type_by_uuid($UUID,$TYPE)
-	{
-		// Get our valid object types
-		$TYPES = $this->object_types();
-		// Check to see if the one we were passed is valid for this function
-		if ( !in_array($TYPE,$TYPES) ) {
-			throw new \Exception("Object type provided {$TYPE} is not supported");
-		}
+    public function get_object_type_by_uuid($UUID, $TYPE)
+    {
+        // Get our valid object types
+        $TYPES = $this->object_types();
+        // Check to see if the one we were passed is valid for this function
+        if (!in_array($TYPE, $TYPES)) {
+            throw new \Exception("Object type provided {$TYPE} is not supported");
+        }
 
-		$QUERY = ['uuid' => $UUID];
-		$FUNCTION = 'get' . $TYPE;
+        $QUERY = ['uuid' => $UUID];
+        $FUNCTION = 'get'.$TYPE;
         $BASETIME = \Utility::microtime_ticks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
         $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
         $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
-		$RETURN = $this->decode_soap_reply($RETURN);
-		$RETURN = reset($RETURN);
-        return $RETURN;
-	}
+        $RETURN = $this->decode_soap_reply($RETURN);
+        $RETURN = reset($RETURN);
 
-	// DELETE STUFF
+        return $RETURN;
+    }
+
+    // DELETE STUFF
 
     // Only way I want to support removing items is by UUID, this is for safety because object names may not be unique
 
-    public function delete_object_type_by_uuid($UUID,$TYPE)
+    public function delete_object_type_by_uuid($UUID, $TYPE)
     {
-		// Get our valid object types
-		$TYPES = $this->object_types();
-		// Check to see if the one we were passed is valid for this function
-		if ( !in_array($TYPE,$TYPES) ) {
-			throw new \Exception("Object type provided {$TYPE} is not supported");
-		}
+        // Get our valid object types
+        $TYPES = $this->object_types();
+        // Check to see if the one we were passed is valid for this function
+        if (!in_array($TYPE, $TYPES)) {
+            throw new \Exception("Object type provided {$TYPE} is not supported");
+        }
 
-		$QUERY = ['uuid' => $UUID];
-		$FUNCTION = 'remove' . $TYPE;
+        $QUERY = ['uuid' => $UUID];
+        $FUNCTION = 'remove'.$TYPE;
         $BASETIME = \Utility::microtime_ticks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
         $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
@@ -408,98 +415,98 @@ class Callmanager
         return $RETURN;
     }
 
-	public function delete_all_object_types_by_site($SITE)
-	{
-		// This works - but do not call it!
-		throw new \Exception("DO NOT CALL THIS FUNCTION");
-		return;
+    public function delete_all_object_types_by_site($SITE)
+    {
+        // This works - but do not call it!
+        throw new \Exception('DO NOT CALL THIS FUNCTION');
 
-		// The order of this list is critical to successfully remove all the objects in a given site...
-		$ORDER = [	'TransPattern',
-					'updateDevicePool',
-					'RouteGroup',
-					'H323Gateway',
-					'MediaResourceList',
-					'MediaResourceGroup',
-					'Mtp',
-					'ConferenceBridge',
-					'DevicePool',
-					'CallManagerGroup',
-					'Region',
-					'Location',
-					'Css',
-					'RoutePartition',
-					'Srst',
-					];
-		$OBJECTS = $this->get_all_object_types_by_site($SITE);
-		foreach ($ORDER as $STEP) {
-			// This step is special
-			if ($STEP == "updateDevicePool") {
-				// Go through all the device pools
-				foreach($OBJECTS['DevicePool'] as $UUID => $DP) {
-					// Pull the device pool out of the database - do i even need to do this?
-					//$DP = $this->get_object_type_by_uuid($UUID,'DevicePool');
-					// Build a query to blank out the mediaResourceListName and localRouteGroup['value'] properties
-			        $QUERY = ['uuid' => $UUID];
-					$QUERY['mediaResourceListName'] = '';
-					$QUERY['localRouteGroup'] = ['name' => 'Standard Local Route Group', 'value' => ''];
-					$BASETIME = \Utility::microtime_ticks();
-					// Remove references to objects we plan to delete shortly from this
-					$RETURN = $this->SOAPCLIENT->updateDevicePool($QUERY);
-					$DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-					$this->log_soap_call('updateSrst', $DIFFTIME, $QUERY, $RETURN);
-					// Now we can continue deleting the other object types
-				}
-			}else{
-				foreach($OBJECTS[$STEP] as $UUID => $NAME)
-				{
-					print "Attempting to delete object type {$STEP} name {$NAME} UUID {$UUID}\n";
-					try {
-						$this->delete_object_type_by_uuid($UUID,$STEP);
-					} catch (\Exception $E) {
-						print "Error deleteing object! {$E->getmessage()}\n";
-					}
-				}
-			}
-		}
-	}
+        return;
 
-	// ADD STUFF
+        // The order of this list is critical to successfully remove all the objects in a given site...
+        $ORDER = ['TransPattern',
+                    'updateDevicePool',
+                    'RouteGroup',
+                    'H323Gateway',
+                    'MediaResourceList',
+                    'MediaResourceGroup',
+                    'Mtp',
+                    'ConferenceBridge',
+                    'DevicePool',
+                    'CallManagerGroup',
+                    'Region',
+                    'Location',
+                    'Css',
+                    'RoutePartition',
+                    'Srst',
+                    ];
+        $OBJECTS = $this->get_all_object_types_by_site($SITE);
+        foreach ($ORDER as $STEP) {
+            // This step is special
+            if ($STEP == 'updateDevicePool') {
+                // Go through all the device pools
+                foreach ($OBJECTS['DevicePool'] as $UUID => $DP) {
+                    // Pull the device pool out of the database - do i even need to do this?
+                    //$DP = $this->get_object_type_by_uuid($UUID,'DevicePool');
+                    // Build a query to blank out the mediaResourceListName and localRouteGroup['value'] properties
+                    $QUERY = ['uuid' => $UUID];
+                    $QUERY['mediaResourceListName'] = '';
+                    $QUERY['localRouteGroup'] = ['name' => 'Standard Local Route Group', 'value' => ''];
+                    $BASETIME = \Utility::microtime_ticks();
+                    // Remove references to objects we plan to delete shortly from this
+                    $RETURN = $this->SOAPCLIENT->updateDevicePool($QUERY);
+                    $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+                    $this->log_soap_call('updateSrst', $DIFFTIME, $QUERY, $RETURN);
+                    // Now we can continue deleting the other object types
+                }
+            } else {
+                foreach ($OBJECTS[$STEP] as $UUID => $NAME) {
+                    print "Attempting to delete object type {$STEP} name {$NAME} UUID {$UUID}\n";
+                    try {
+                        $this->delete_object_type_by_uuid($UUID, $STEP);
+                    } catch (\Exception $E) {
+                        print "Error deleteing object! {$E->getmessage()}\n";
+                    }
+                }
+            }
+        }
+    }
 
-	// This generalized add function expects $DATA to be correct for $TYPE objects
+    // ADD STUFF
 
-	public function add_object_type_by_assoc($DATA,$TYPE)
-	{
-		// Get our valid object types
-		$TYPES = $this->object_types();
-		// Check to see if the one we were passed is valid for this function
-		if ( !in_array($TYPE,$TYPES) ) {
-			throw new \Exception("Object type provided {$TYPE} is not supported");
-		}
+    // This generalized add function expects $DATA to be correct for $TYPE objects
 
-		$TYPE = strtolower($TYPE);
-		$QUERY = [ $TYPE => $DATA ];
-		//dumper($QUERY);
-		$FUNCTION = 'add' . $TYPE;
-		$BASETIME = \Utility::microtime_ticks();
-		$RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
-		$DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-		$this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
-		$RETURN = $this->object_to_assoc($RETURN);
-		$RETURN = reset($RETURN);
+    public function add_object_type_by_assoc($DATA, $TYPE)
+    {
+        // Get our valid object types
+        $TYPES = $this->object_types();
+        // Check to see if the one we were passed is valid for this function
+        if (!in_array($TYPE, $TYPES)) {
+            throw new \Exception("Object type provided {$TYPE} is not supported");
+        }
 
-		return $RETURN;
-	}
+        $TYPE = strtolower($TYPE);
+        $QUERY = [$TYPE => $DATA];
+        //dumper($QUERY);
+        $FUNCTION = 'add'.$TYPE;
+        $BASETIME = \Utility::microtime_ticks();
+        $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
+        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
+        $RETURN = $this->object_to_assoc($RETURN);
+        $RETURN = reset($RETURN);
 
-	/*
-	    These functions are all going to be removed in a future version, the new generalized versions are better...
-	*/
+        return $RETURN;
+    }
+
+    /*
+        These functions are all going to be removed in a future version, the new generalized versions are better...
+    */
 
     // This builds a $type array for soap add requests against CUCM AXL
 
     public function axl_add_query_array($TYPE, $DATA)
     {
-        return [ $TYPE => $DATA ];
+        return [$TYPE => $DATA];
     }
 
     // Handle adding a new SRST router to a site with specific IPv4 address
