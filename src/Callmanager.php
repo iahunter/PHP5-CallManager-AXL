@@ -240,6 +240,7 @@ class Callmanager
 					'H323Gateway',
 					'RouteGroup',
 					'TransPattern',
+					'DateTimeGroup',
 				];
 		return $TYPES;
 	}
@@ -315,8 +316,7 @@ class Callmanager
 		$TYPES = $this->object_types();
 		$RETURN = array();
 		foreach ($TYPES as $TYPE) {
-			// The last parameter is false for stop-on-error, we will NOT throw an exception but return a blank array element
-			$RETURN[$TYPE] = $this->get_object_type_by_site($SITE,$TYPE,false);
+			$RETURN[$TYPE] = $this->get_object_type_by_site($SITE,$TYPE);
 		}
 		return $RETURN;
 	}
@@ -411,9 +411,9 @@ class Callmanager
 	public function delete_all_object_types_by_site($SITE)
 	{
 		// This works - but do not call it!
-		throw new \Exception("DO NOT CALL THIS FUNCTION");
+/*		throw new \Exception("DO NOT CALL THIS FUNCTION");
 		return;
-
+/**/
 		// The order of this list is critical to successfully remove all the objects in a given site...
 		$ORDER = [	'TransPattern',
 					'updateDevicePool',
@@ -477,7 +477,9 @@ class Callmanager
 			throw new \Exception("Object type provided {$TYPE} is not supported");
 		}
 
-		$TYPE = strtolower($TYPE);
+		// Only the FIRST letter in the type needs to be lower case
+		// so we cant do $TYPE = strtolower($TYPE);
+		$TYPE = lcfirst($TYPE);
 		$QUERY = [ $TYPE => $DATA ];
 		//dumper($QUERY);
 		$FUNCTION = 'add' . $TYPE;
@@ -491,70 +493,52 @@ class Callmanager
 		return $RETURN;
 	}
 
-	/*
-	    These functions are all going to be removed in a future version, the new generalized versions are better...
-	*/
+	// UPDATE STUFF
 
-    // This builds a $type array for soap add requests against CUCM AXL
+	// This generalized update function expects $DATA to be correct for $TYPE objects
 
-    public function axl_add_query_array($TYPE, $DATA)
-    {
-        return [ $TYPE => $DATA ];
-    }
+	public function update_object_type_by_assoc($DATA,$TYPE)
+	{
+		// Get our valid object types
+		$TYPES = $this->object_types();
+		// Check to see if the one we were passed is valid for this function
+		if ( !in_array($TYPE,$TYPES) ) {
+			throw new \Exception("Object type provided {$TYPE} is not supported");
+		}
+		// There may be a case where the name is not actually called name
+		$NAMEFIELD = "name";
+		if ( !isset($DATA[$NAMEFIELD]) || !$DATA[$NAMEFIELD] ) {
+			throw new \Exception("Data does not contain a valid name to update");
+		}
+		$NAME = $DATA[$NAMEFIELD];
+		// Get their object information out of the database
+		$OBJECT = $this->get_object_type_by_name($NAME,$TYPE);
+		//print "DUMP OF OBJECT WE FOUND TO EDIT:\n"; dumper($OBJECT);
 
-    // Handle adding a new SRST router to a site with specific IPv4 address
+        // TODO: Make sure this is a valid object? Do some other checks?
 
-    public function add_srst_router($SITE, $IP)
-    {
-        // Do all of our input validation
-        if (!$SITE) {
-            // And we need to add more checks to make sure the site code is a valid CORPORATE site code
-            throw new \Exception("Site name provided {$SITE} is not valid");
-        }
-        if (!filter_var($IP, FILTER_VALIDATE_IP)) {
-            throw new \Exception("IP address provided {$IP} is not valid");
-        }
-        $QUERY = ['name' => "SRST_{$SITE}", 'ipAddress' => $IP, 'port' => 2000, 'SipPort' => 5060];
-        $QUERY = $this->axl_add_query_array('srst', $QUERY);
-        // Add our new SRST router
-        $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->addSrst($QUERY);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('addSrst', $DIFFTIME, $QUERY, $RETURN);
-
-        return $RETURN;
-    }
-
-    // Handle updating a named SRST router
-
-    public function update_srst_router($NAME, $DATA)
-    {
-        $SRST = $this->get_srst_router_by_name($NAME);
-        $SRST = reset($SRST);
-        // TODO: Make sure this is a valid SRST router? Do some other checks?
-        print "Found SRST router to update:\n";
-        dumper($SRST);
         // Force the query to use our name as search criteria
-        $QUERY = ['name' => $NAME];
-        // Loop through SRST keys and see if the value passed has changed
-        foreach ($SRST as $KEY => $VALUE) {
-            // Make sure the SRST router key val pair is also defined in the new data passed
-            if (isset($DATA[$KEY])) {
-                // Check if the value of the new data has changed from the original
-                if ($DATA[$KEY] != $VALUE) {
-                    // Build our update query of different values
-                    $QUERY[$KEY] = $DATA[$KEY];
-                }
+        $QUERY = [$NAMEFIELD => $NAME];
+        // Loop through object keys and see if the value passed has changed
+        foreach ($OBJECT as $KEY => $VALUE) {
+            // Make sure the object key val pair is defined in the new data passed
+            // AND check if the value of the new data has changed from the original
+            if (isset($DATA[$KEY]) && $DATA[$KEY] != $VALUE) {
+                // Build our update query of different values
+                $QUERY[$KEY] = $DATA[$KEY];
             }
         }
-        // Update our SRST router
+		//print "QUERY CALCULATED ON OBJECT TO UPDATE:\n"; dumper($QUERY);
+        // Update our object
+		$FUNCTION = 'update' . $TYPE;
         $BASETIME = \Utility::microtime_ticks();
-        $RETURN = $this->SOAPCLIENT->updateSrst($QUERY);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
-        // log our soap call
-        $this->log_soap_call('updateSrst', $DIFFTIME, $QUERY, $RETURN);
+		$RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
+		$DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+		$this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
+		$RETURN = $this->object_to_assoc($RETURN);
+		$RETURN = reset($RETURN);
 
-        return $RETURN;
-    }
+		return $RETURN;
+	}
+
 }
