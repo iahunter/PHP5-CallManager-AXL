@@ -25,7 +25,6 @@
  * @copyright 2015 @authors
  * @license   http://www.gnu.org/copyleft/lesser.html The GNU LESSER GENERAL PUBLIC LICENSE, Version 3.0
  */
-
 namespace CallmanagerAXL;
 
 class Callmanager
@@ -225,7 +224,7 @@ class Callmanager
     public function object_types()
     {
         // Valid object types this function works for
-        $TYPES = [	'DevicePool',
+        $TYPES = ['DevicePool',
                     'Srst',
                     'RoutePartition',
                     'Css',
@@ -242,7 +241,7 @@ class Callmanager
                     'TransPattern',
                     'DateTimeGroup',
                     'Phone',
-					'Line',
+                    'Line',
                 ];
 
         return $TYPES;
@@ -283,8 +282,10 @@ class Callmanager
             throw new \Exception("Object type provided {$TYPE} is not supported");
         }
 
-		// Lines is a special case due to highly nested indirect nature of its search selector relationships
-		if($TYPE == 'Line') { return $this->get_lines_by_site($SITE); }
+        // Lines is a special case due to highly nested indirect nature of its search selector relationships
+        if ($TYPE == 'Line') {
+            return $this->get_lines_by_site($SITE);
+        }
         //$TYPES = array_diff($TYPES, ['Line']);
 
         //	This is the default search and return criteria for MOST object types. There are a few exceptions
@@ -317,33 +318,34 @@ class Callmanager
         return $RETURN;
     }
 
-	// List lines by site is indirect and dumb. phones are identified by device pool name of DP_SITE, lines are identified by owning phones.
-	// This function will need to get every phone in a device pool and then build a list of every LINE that is returned.
-	public function get_lines_by_site($SITE)
-	{
-		// Get all the phone object uuid=>names for a given site (based on device pool)
-		$PHONES = $this->get_object_type_by_site($SITE, 'Phone');
-		$LINES = [];
-		// Loop through our phones at a site and use the UUID to get its detailed object information
-		foreach($PHONES as $UUID => $NAME) {
-			$PHONE = $this->get_object_type_by_uuid($UUID, 'Phone');
-			// if there are lines in the phone go get the uuid and name for each line dirn
-			if( isset($PHONE['lines']) && is_array($PHONE['lines']) && count($PHONE['lines']) ) {
-				// loop through each line on the phone and suck out the uuid and dial pattern
-				foreach($PHONE['lines'] as $PHONELINE) {
-					// If the phone has a dirn element with elements
-					if( isset($PHONELINE['dirn']) && is_array($PHONELINE['dirn']) && count($PHONELINE['dirn']) ) {
-						// And the dirn has a uuid and pattern with value
-						if( isset($PHONELINE['dirn']['pattern']) && $PHONELINE['dirn']['pattern'] &&	isset($PHONELINE['dirn']['uuid']) && $PHONELINE['dirn']['uuid']	) {
-							// Save this line to the list of site lines we return
-							$LINES[$PHONELINE['dirn']['uuid']] = $PHONELINE['dirn']['pattern'];
-						}
-					}
-				}
-			}
-		}
-		return $LINES;
-	}
+    // List lines by site is indirect and dumb. phones are identified by device pool name of DP_SITE, lines are identified by owning phones.
+    // This function will need to get every phone in a device pool and then build a list of every LINE that is returned.
+    public function get_lines_by_site($SITE)
+    {
+        // Get all the phone object uuid=>names for a given site (based on device pool)
+        $PHONES = $this->get_object_type_by_site($SITE, 'Phone');
+        $LINES = [];
+        // Loop through our phones at a site and use the UUID to get its detailed object information
+        foreach ($PHONES as $UUID => $NAME) {
+            $PHONE = $this->get_object_type_by_uuid($UUID, 'Phone');
+            // if there are lines in the phone go get the uuid and name for each line dirn
+            if (isset($PHONE['lines']) && is_array($PHONE['lines']) && count($PHONE['lines'])) {
+                // loop through each line on the phone and suck out the uuid and dial pattern
+                foreach ($PHONE['lines'] as $PHONELINE) {
+                    // If the phone has a dirn element with elements
+                    if (isset($PHONELINE['dirn']) && is_array($PHONELINE['dirn']) && count($PHONELINE['dirn'])) {
+                        // And the dirn has a uuid and pattern with value
+                        if (isset($PHONELINE['dirn']['pattern']) && $PHONELINE['dirn']['pattern'] &&    isset($PHONELINE['dirn']['uuid']) && $PHONELINE['dirn']['uuid']) {
+                            // Save this line to the list of site lines we return
+                            $LINES[$PHONELINE['dirn']['uuid']] = $PHONELINE['dirn']['pattern'];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $LINES;
+    }
 
     // This returns an associative array for each of the above types
 
@@ -390,7 +392,7 @@ class Callmanager
         $TYPES = $this->object_types();
         // TransPattern is not valid for get-item-by-NAME, must use UUID or a combination of name and routepartitionname
         $TYPES = array_diff($TYPES, ['TransPattern']);
-		// Lines is not valid for get-item-by-name, must be UUID
+        // Lines is not valid for get-item-by-name, must be UUID
         $TYPES = array_diff($TYPES, ['Line']);
         // Check to see if the one we were passed is valid for this function
         if (!in_array($TYPE, $TYPES)) {
@@ -460,7 +462,7 @@ class Callmanager
         return;
 /**/
         // The order of this list is critical to successfully remove all the objects in a given site...
-        $ORDER = [	'TransPattern',
+        $ORDER = ['TransPattern',
                     'updateDevicePool',
                     'RouteGroup',
                     'H323Gateway',
@@ -497,11 +499,11 @@ class Callmanager
                 }
             } else {
                 foreach ($OBJECTS[$STEP] as $UUID => $NAME) {
-                    print "Attempting to delete object type {$STEP} name {$NAME} UUID {$UUID}\n";
+                    echo "Attempting to delete object type {$STEP} name {$NAME} UUID {$UUID}\n";
                     try {
                         $this->delete_object_type_by_uuid($UUID, $STEP);
                     } catch (\Exception $E) {
-                        print "Error deleteing object! {$E->getmessage()}\n";
+                        echo "Error deleteing object! {$E->getmessage()}\n";
                     }
                 }
             }
