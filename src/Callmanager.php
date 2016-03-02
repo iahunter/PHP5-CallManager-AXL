@@ -139,9 +139,9 @@ class Callmanager
     {
         $SEARCH = $this->axl_search_return_array(['devicePoolName' => '%'], ['name' => '']);
         // Search the CUCM for all phones
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->listPhone($SEARCH);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         // log our soap call
         $this->log_soap_call('listPhone', $DIFFTIME, $SEARCH, $RETURN);
         // Decode the reply into an array of results
@@ -157,9 +157,9 @@ class Callmanager
     public function get_phone_by_name($NAME)
     {
         $SEARCH = ['name' => $NAME];
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->getPhone($SEARCH);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         // log our soap call
         $this->log_soap_call('getPhone', $DIFFTIME, $SEARCH, $RETURN);
         // Decode the reply into an array of results
@@ -204,9 +204,9 @@ class Callmanager
     {
         $SEARCH = $this->axl_search_return_array(['name' => '%'], ['name' => '']);
         // Search the CUCM for all device pools
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->listDevicePool($SEARCH);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         // log our soap call
         $this->log_soap_call('listDevicePool', $DIFFTIME, $SEARCH, $RETURN);
         // Count our soap call
@@ -305,9 +305,9 @@ class Callmanager
         $SEARCH = $this->axl_search_return_array($FIND, $RETR);
         $FUNCTION = 'list'.$TYPE;
         // Search the CUCM for matching SRST devices
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($SEARCH);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         // log our soap call
         $this->log_soap_call($FUNCTION, $DIFFTIME, $SEARCH, $RETURN);
         // Decode the reply into an array of results
@@ -401,9 +401,9 @@ class Callmanager
 
         $QUERY = ['name' => $NAME];
         $FUNCTION = 'get'.$TYPE;
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
         $RETURN = $this->decode_soap_reply($RETURN);
         $RETURN = reset($RETURN);
@@ -422,9 +422,9 @@ class Callmanager
 
         $QUERY = ['uuid' => $UUID];
         $FUNCTION = 'get'.$TYPE;
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
         $RETURN = $this->decode_soap_reply($RETURN);
         $RETURN = reset($RETURN);
@@ -447,9 +447,9 @@ class Callmanager
 
         $QUERY = ['uuid' => $UUID];
         $FUNCTION = 'remove'.$TYPE;
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
 
         return $RETURN;
@@ -490,10 +490,10 @@ class Callmanager
                     $QUERY = ['uuid' => $UUID];
                     $QUERY['mediaResourceListName'] = '';
                     $QUERY['localRouteGroup'] = ['name' => 'Standard Local Route Group', 'value' => ''];
-                    $BASETIME = \Utility::microtime_ticks();
+                    $BASETIME = \metaclassing\Utility::microtimeTicks();
                     // Remove references to objects we plan to delete shortly from this
                     $RETURN = $this->SOAPCLIENT->updateDevicePool($QUERY);
-                    $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+                    $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
                     $this->log_soap_call('updateSrst', $DIFFTIME, $QUERY, $RETURN);
                     // Now we can continue deleting the other object types
                 }
@@ -529,9 +529,9 @@ class Callmanager
         $QUERY = [$TYPE => $DATA];
         //dumper($QUERY);
         $FUNCTION = 'add'.$TYPE;
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
         $RETURN = $this->object_to_assoc($RETURN);
         $RETURN = reset($RETURN);
@@ -577,9 +577,9 @@ class Callmanager
         //print "QUERY CALCULATED ON OBJECT TO UPDATE:\n"; dumper($QUERY);
         // Update our object
         $FUNCTION = 'update'.$TYPE;
-        $BASETIME = \Utility::microtime_ticks();
+        $BASETIME = \metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
-        $DIFFTIME = \Utility::microtime_ticks() - $BASETIME;
+        $DIFFTIME = \metaclassing\Utility::microtimeTicks() - $BASETIME;
         $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
         $RETURN = $this->object_to_assoc($RETURN);
         $RETURN = reset($RETURN);
