@@ -45,13 +45,13 @@ class Callmanager
         $OPTIONS = [
                     'trace'                 => true,
                     'exceptions'            => true,
-					'stream_context'=> stream_context_create(
-						[ 'ssl' => [
-							'verify_peer'			=> false,
-							'verify_peer_name'		=> false,
-							'allow_self_signed'		=> true,
-							]
-						]),
+                    'stream_context'        => stream_context_create(
+                        ['ssl' => [
+                            'verify_peer'              => false,
+                            'verify_peer_name'         => false,
+                            'allow_self_signed'        => true,
+                            ],
+                        ]),
                     'connection_timeout'    => 10,
                     'location'              => $URL,
                     'login'                 => $USERNAME,
@@ -95,9 +95,9 @@ class Callmanager
         if (!property_exists($SOAPREPLY, 'return')) {
             throw new \Exception('SOAP reply does not have the property return');
         }
-		$SOAPRETURN = $SOAPREPLY->return;
-		$SOAPOBJVARS = get_object_vars($SOAPRETURN);
-		$RETURN = reset($SOAPOBJVARS);
+        $SOAPRETURN = $SOAPREPLY->return;
+        $SOAPOBJVARS = get_object_vars($SOAPRETURN);
+        $RETURN = reset($SOAPOBJVARS);
         if (is_object($RETURN)) {
             // Single objects mean we recieved exactly one element in the reply
             $RETURN = [$this->object_to_assoc($RETURN)];
@@ -231,7 +231,7 @@ class Callmanager
     public function get_route_plan_by_name($pattern, $partition = 'Global-All-Lines')
     {
         $SEARCH = $this->axl_search_return_array(['dnOrPattern' => $pattern, 'partition' => $partition],
-												 ['dnOrPattern' => '', 'partition' => '', 'type' => '', 'routeDetail' => '']);
+                                                 ['dnOrPattern' => '', 'partition' => '', 'type' => '', 'routeDetail' => '']);
         // Search the CUCM for all device pools
         $BASETIME = \Metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->listRoutePlan($SEARCH);
@@ -363,7 +363,7 @@ class Callmanager
                     // If the phone has a dirn element with elements
                     if (isset($PHONELINE['dirn']) && is_array($PHONELINE['dirn']) && count($PHONELINE['dirn'])) {
                         // And the dirn has a uuid and pattern with value
-                        if (isset($PHONELINE['dirn']['pattern']) && $PHONELINE['dirn']['pattern'] &&    isset($PHONELINE['dirn']['uuid']) && $PHONELINE['dirn']['uuid']) {
+                        if (isset($PHONELINE['dirn']['pattern']) && $PHONELINE['dirn']['pattern'] && isset($PHONELINE['dirn']['uuid']) && $PHONELINE['dirn']['uuid']) {
                             // Save this line to the list of site lines we return
                             $LINES[$PHONELINE['dirn']['uuid']] = $PHONELINE['dirn']['pattern'];
                         }
