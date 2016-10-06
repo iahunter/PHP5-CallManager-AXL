@@ -114,8 +114,10 @@ class Callmanager
     public function assoc_key_values_to_array($ASSOC, $AKEY, $STOPONERROR = true)
     {
         $RETURN = [];
-        // Loop through the array of key=>value pairs
+      
+		// Make sure its $ASSOC is an array or it errors out. 
 		if (is_array($ASSOC)){
+			// Loop through the array of key=>value pairs
 			foreach ($ASSOC as $KEY => $VALUE) {
 				if (isset($VALUE[$AKEY]) && $VALUE[$AKEY] !== '') {
 					if (isset($VALUE['uuid']) && $VALUE['uuid']) {
