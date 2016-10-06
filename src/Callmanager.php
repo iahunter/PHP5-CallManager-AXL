@@ -115,19 +115,21 @@ class Callmanager
     {
         $RETURN = [];
         // Loop through the array of key=>value pairs
-        foreach ($ASSOC as $KEY => $VALUE) {
-            if (isset($VALUE[$AKEY]) && $VALUE[$AKEY] !== '') {
-                if (isset($VALUE['uuid']) && $VALUE['uuid']) {
-                    // If the query returns a UUID, use that as our array key!
-                    $RETURN[$VALUE['uuid']] = $VALUE[$AKEY];
-                } else {
-                    // If the query does NOT return a UUID, use sequencial keys
-                    array_push($RETURN, $VALUE[$AKEY]);
-                }
-            } elseif ($STOPONERROR) {
-                throw new \Exception("Assoc array value does not have key {$KEY}");
-            }
-        }
+		if (is_array($ASSOC)){
+			foreach ($ASSOC as $KEY => $VALUE) {
+				if (isset($VALUE[$AKEY]) && $VALUE[$AKEY] !== '') {
+					if (isset($VALUE['uuid']) && $VALUE['uuid']) {
+						// If the query returns a UUID, use that as our array key!
+						$RETURN[$VALUE['uuid']] = $VALUE[$AKEY];
+					} else {
+						// If the query does NOT return a UUID, use sequencial keys
+						array_push($RETURN, $VALUE[$AKEY]);
+					}
+				} elseif ($STOPONERROR) {
+					throw new \Exception("Assoc array value does not have key {$KEY}");
+				}
+			}
+		}
 
         return $RETURN;
     }
@@ -254,7 +256,6 @@ class Callmanager
         $TYPES = ['DevicePool',
                     'Srst',
                     'RoutePartition',
-                    'RoutePlan',
                     'Css',
                     'Location',
                     'Region',
@@ -331,6 +332,7 @@ class Callmanager
             $RETR = ['pattern' => ''];
         }
         $SEARCH = $this->axl_search_return_array($FIND, $RETR);
+	
         $FUNCTION = 'list'.$TYPE;
         // Search the CUCM for matching SRST devices
         $BASETIME = \Metaclassing\Utility::microtimeTicks();
@@ -340,8 +342,12 @@ class Callmanager
         $this->log_soap_call($FUNCTION, $DIFFTIME, $SEARCH, $RETURN);
         // Decode the reply into an array of results
         $RETURN = $this->decode_soap_reply($RETURN);
-        // Turn the associative arrays into a single simensional array list
-        $RETURN = $this->assoc_key_values_to_array($RETURN, reset(array_keys($RETR)));
+        
+		
+		// Turn the associative arrays into a single simensional array list
+		$AKEYS = array_keys($RETR);
+		$RESET = reset($AKEYS);
+		$RETURN = $this->assoc_key_values_to_array($RETURN, $RESET);
 
         return $RETURN;
     }
@@ -384,6 +390,12 @@ class Callmanager
 
         $RETURN = [];
         foreach ($TYPES as $TYPE) {
+			if(php_sapi_name() === 'cli'){
+				print "Getting {$SITE}s {$TYPE}...".PHP_EOL;
+			}
+			if($TYPE == 'Line'){
+				continue;
+			}
             $RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
         }
 
@@ -394,7 +406,6 @@ class Callmanager
     {
         // Get our valid object types
         $TYPES = $this->object_types();
-
         $RETURN = [];
         foreach ($TYPES as $TYPE) {
             try {
