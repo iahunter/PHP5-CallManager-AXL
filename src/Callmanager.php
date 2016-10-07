@@ -269,6 +269,7 @@ class Callmanager
                     'MediaResourceList',
                     'H323Gateway',
                     'RouteGroup',
+					'RouteList',
                     'TransPattern',
                     'DateTimeGroup',
                     'Phone',
@@ -393,12 +394,16 @@ class Callmanager
         $RETURN = [];
         foreach ($TYPES as $TYPE) {
 			if(php_sapi_name() === 'cli'){
-				print "Getting {$SITE}s {$TYPE}...".PHP_EOL;
+				//print "Getting {$SITE}s {$TYPE}...".PHP_EOL;
 			}
 			if($TYPE == 'Line'){
 				continue;
 			}
-            $RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
+            try {
+				$RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
+			} catch (\Exception $E) {
+				$RETURN[$TYPE] = [];
+			}
         }
 
         return $RETURN;
