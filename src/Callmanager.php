@@ -618,7 +618,13 @@ class Callmanager
             if (isset($DATA[$KEY]) && $DATA[$KEY] != $VALUE) {
                 // Build our update query of different values
                 $QUERY[$KEY] = $DATA[$KEY];
-            }
+            }elseif(isset($DATA['addMembers'])){
+				// Add it to query if the addMembersis set. This is for CSS updates
+				$QUERY['addMembers'] = $DATA['addMembers'];
+			}elseif(isset($DATA['removeMembers'])){
+				// Add it to query if the removeMembers is set. This is for CSS updates
+				$QUERY['removeMembers'] = $DATA['removeMembers'];
+			}
         }
         //print "QUERY CALCULATED ON OBJECT TO UPDATE:\n"; dumper($QUERY);
         // Update our object
