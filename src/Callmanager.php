@@ -270,6 +270,7 @@ class Callmanager
                     'H323Gateway',
                     'RouteGroup',
 					'RouteList',
+					'RoutePattern',
                     'TransPattern',
                     'DateTimeGroup',
                     'Phone',
@@ -329,7 +330,11 @@ class Callmanager
         // H323 Gateway search uses a different search name field
         } elseif ($TYPE == 'H323Gateway') {
             $FIND = ['devicePoolName' => "%{$SITE}%"];
-        // So does translation pattern search and returns a different field
+        // So does route pattern search and returns a different field - Need to search by specific Partition;
+		} elseif ($TYPE == 'RoutePattern') {
+            $FIND = ['routePartitionName' => "%{$SITE}%"];
+            $RETR = ['pattern' => '', 'routePartitionName' => ''];
+		// So does translation pattern search and returns a different field
         } elseif ($TYPE == 'TransPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
@@ -571,10 +576,10 @@ class Callmanager
 
         // Only the FIRST letter in the type needs to be lower case
         // so we cant do $TYPE = strtolower($TYPE);
+		$FUNCTION = 'add'.$TYPE;
         $TYPE = lcfirst($TYPE);
         $QUERY = [$TYPE => $DATA];
-        //dumper($QUERY);
-        $FUNCTION = 'add'.$TYPE;
+        print_r($QUERY);
         $BASETIME = \Metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
         $DIFFTIME = \Metaclassing\Utility::microtimeTicks() - $BASETIME;
