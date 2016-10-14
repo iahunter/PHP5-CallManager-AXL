@@ -114,24 +114,24 @@ class Callmanager
     public function assoc_key_values_to_array($ASSOC, $AKEY, $STOPONERROR = true)
     {
         $RETURN = [];
-      
-		// Make sure its $ASSOC is an array or it errors out. 
-		if (is_array($ASSOC)){
-			// Loop through the array of key=>value pairs
-			foreach ($ASSOC as $KEY => $VALUE) {
-				if (isset($VALUE[$AKEY]) && $VALUE[$AKEY] !== '') {
-					if (isset($VALUE['uuid']) && $VALUE['uuid']) {
-						// If the query returns a UUID, use that as our array key!
-						$RETURN[$VALUE['uuid']] = $VALUE[$AKEY];
-					} else {
-						// If the query does NOT return a UUID, use sequencial keys
-						array_push($RETURN, $VALUE[$AKEY]);
-					}
-				} elseif ($STOPONERROR) {
-					throw new \Exception("Assoc array value does not have key {$KEY}");
-				}
-			}
-		}
+
+        // Make sure its $ASSOC is an array or it errors out.
+        if (is_array($ASSOC)) {
+            // Loop through the array of key=>value pairs
+            foreach ($ASSOC as $KEY => $VALUE) {
+                if (isset($VALUE[$AKEY]) && $VALUE[$AKEY] !== '') {
+                    if (isset($VALUE['uuid']) && $VALUE['uuid']) {
+                        // If the query returns a UUID, use that as our array key!
+                        $RETURN[$VALUE['uuid']] = $VALUE[$AKEY];
+                    } else {
+                        // If the query does NOT return a UUID, use sequencial keys
+                        array_push($RETURN, $VALUE[$AKEY]);
+                    }
+                } elseif ($STOPONERROR) {
+                    throw new \Exception("Assoc array value does not have key {$KEY}");
+                }
+            }
+        }
 
         return $RETURN;
     }
@@ -269,7 +269,7 @@ class Callmanager
                     'MediaResourceList',
                     'H323Gateway',
                     'RouteGroup',
-					'RouteList',
+                    'RouteList',
                     'TransPattern',
                     'DateTimeGroup',
                     'Phone',
@@ -335,7 +335,7 @@ class Callmanager
             $RETR = ['pattern' => ''];
         }
         $SEARCH = $this->axl_search_return_array($FIND, $RETR);
-	
+
         $FUNCTION = 'list'.$TYPE;
         // Search the CUCM for matching SRST devices
         $BASETIME = \Metaclassing\Utility::microtimeTicks();
@@ -345,12 +345,12 @@ class Callmanager
         $this->log_soap_call($FUNCTION, $DIFFTIME, $SEARCH, $RETURN);
         // Decode the reply into an array of results
         $RETURN = $this->decode_soap_reply($RETURN);
-        
-		
-		// Turn the associative arrays into a single simensional array list
-		$AKEYS = array_keys($RETR);
-		$RESET = reset($AKEYS);
-		$RETURN = $this->assoc_key_values_to_array($RETURN, $RESET);
+
+
+        // Turn the associative arrays into a single simensional array list
+        $AKEYS = array_keys($RETR);
+        $RESET = reset($AKEYS);
+        $RETURN = $this->assoc_key_values_to_array($RETURN, $RESET);
 
         return $RETURN;
     }
@@ -393,17 +393,17 @@ class Callmanager
 
         $RETURN = [];
         foreach ($TYPES as $TYPE) {
-			if(php_sapi_name() === 'cli'){
-				//print "Getting {$SITE}s {$TYPE}...".PHP_EOL;
-			}
-			if($TYPE == 'Line'){
-				continue;
-			}
+            if (php_sapi_name() === 'cli') {
+                //print "Getting {$SITE}s {$TYPE}...".PHP_EOL;
+            }
+            if ($TYPE == 'Line') {
+                continue;
+            }
             try {
-				$RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
-			} catch (\Exception $E) {
-				$RETURN[$TYPE] = [];
-			}
+                $RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
+            } catch (\Exception $E) {
+                $RETURN[$TYPE] = [];
+            }
         }
 
         return $RETURN;
@@ -618,13 +618,13 @@ class Callmanager
             if (isset($DATA[$KEY]) && $DATA[$KEY] != $VALUE) {
                 // Build our update query of different values
                 $QUERY[$KEY] = $DATA[$KEY];
-            }elseif(isset($DATA['addMembers'])){
-				// Add it to query if the addMembersis set. This is for CSS updates
-				$QUERY['addMembers'] = $DATA['addMembers'];
-			}elseif(isset($DATA['removeMembers'])){
-				// Add it to query if the removeMembers is set. This is for CSS updates
-				$QUERY['removeMembers'] = $DATA['removeMembers'];
-			}
+            } elseif (isset($DATA['addMembers'])) {
+                // Add it to query if the addMembersis set. This is for CSS updates
+                $QUERY['addMembers'] = $DATA['addMembers'];
+            } elseif (isset($DATA['removeMembers'])) {
+                // Add it to query if the removeMembers is set. This is for CSS updates
+                $QUERY['removeMembers'] = $DATA['removeMembers'];
+            }
         }
         //print "QUERY CALCULATED ON OBJECT TO UPDATE:\n"; dumper($QUERY);
         // Update our object
