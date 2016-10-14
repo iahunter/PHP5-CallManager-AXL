@@ -280,6 +280,7 @@ class Callmanager
         return $TYPES;
     }
 
+	
     // Get an array of site names
 
     public function get_site_names()
