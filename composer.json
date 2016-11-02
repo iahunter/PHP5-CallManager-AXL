@@ -4,6 +4,7 @@
     "description": "PHP Cisco CallManager AXL SOAP/XML Library",
     "keywords": [
         "php5",
+		"php7",
         "cisco",
         "callmanager",
         "call",
