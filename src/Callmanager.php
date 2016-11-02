@@ -180,7 +180,7 @@ class Callmanager
 																	'locationName' => '',
 																	'ownerUserName' => ''
 																]);
-        // Search the CUCM for all device pools
+        // Search the CUCM for phones from Site Device Pool
         $BASETIME = \Metaclassing\Utility::microtimeTicks();
         $RETURN = $this->SOAPCLIENT->listPhone($SEARCH);
         $DIFFTIME = \Metaclassing\Utility::microtimeTicks() - $BASETIME;
