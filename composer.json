@@ -26,10 +26,6 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {
-        "php": ">=5.3.3",
-        "metaclassing/utility": "dev-master"
-    },
     "require-dev": {
         "phpunit/phpunit": "~4.0"
     },
