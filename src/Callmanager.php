@@ -65,6 +65,7 @@ class Callmanager
 
     private function log_soap_call($CALL, $TIME, $QUERY, $REPLY)
     {
+		
         array_push($this->SOAPCALLS,
                     [
                         'call'     => $CALL,
@@ -75,6 +76,7 @@ class Callmanager
             );
 
         return count($this->SOAPCALLS);
+		
     }
 
     // This converts an object returned by a soap reply from StdClass to associative array
@@ -164,6 +166,33 @@ class Callmanager
 
         return $RETURN;
     }
+	
+	// Including specific fields to return in the list function.
+	
+	public function list_all_phones_summary_by_site($SITE)
+    {	
+	$SEARCH = $this->axl_search_return_array(['devicePoolName' => "%{$SITE}%"], [
+																	'name' => '', 
+																	'description' => '', 
+																	'product' => '', 
+																	'callingSearchSpaceName' => '',
+																	'devicePoolName' => '',
+																	'locationName' => '',
+																	'ownerUserName' => ''
+																]);
+        // Search the CUCM for all device pools
+        $BASETIME = \Metaclassing\Utility::microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->listPhone($SEARCH);
+        $DIFFTIME = \Metaclassing\Utility::microtimeTicks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call('listPhone', $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN);
+        // Turn the associative arrays into a single simensional array list
+        //$RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
+
+        return $RETURN;
+    }
 
     // Get all the information regarding one specific phone by name
 
@@ -249,6 +278,28 @@ class Callmanager
 
         return $RETURN;
     }
+	
+	    // Get an array of route plans by some search string
+
+    public function get_all_users()
+    {
+        $SEARCH = $this->axl_search_return_array(['userid' => "%"],
+                                                 ['firstName' => '', 'lastName' => '', 'userid' => '', 'primaryExtension' => '']);
+        // Search the CUCM for all device pools
+        $BASETIME = \Metaclassing\Utility::microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->listUser($SEARCH);
+        $DIFFTIME = \Metaclassing\Utility::microtimeTicks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call('listUser', $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN);
+        // Turn the associative arrays into a single simensional array list
+        //$RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
+
+        return $RETURN;
+    }
+	
+
 
     // Manage the list of types valid for our generalized dosomething_objecttypexyz_bysomething($1,$2)
 
