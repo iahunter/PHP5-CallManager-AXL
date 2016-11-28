@@ -332,6 +332,7 @@ class Callmanager
                     'RouteList',
                     'RoutePattern',
                     'TransPattern',
+					'ApplicationDialRules',
                     'DateTimeGroup',
                     'Phone',
                     'Line',
