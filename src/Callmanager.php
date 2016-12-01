@@ -327,9 +327,9 @@ class Callmanager
                     'RouteList',
                     'RoutePattern',
                     'TransPattern',
-					'ApplicationDialRules',
-					'CallingPartyTransformationPattern',
-					'CalledPartyTransformationPattern',
+                    'ApplicationDialRules',
+                    'CallingPartyTransformationPattern',
+                    'CalledPartyTransformationPattern',
                     'DateTimeGroup',
                     'Phone',
                     'Line',
@@ -396,11 +396,11 @@ class Callmanager
         } elseif ($TYPE == 'TransPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-		// So does CallingPartyTransformationPattern pattern search and returns a different field
+        // So does CallingPartyTransformationPattern pattern search and returns a different field
         } elseif ($TYPE == 'CallingPartyTransformationPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-		// So does CalledPartyTransformationPattern pattern search and returns a different field
+        // So does CalledPartyTransformationPattern pattern search and returns a different field
         } elseif ($TYPE == 'CalledPartyTransformationPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
