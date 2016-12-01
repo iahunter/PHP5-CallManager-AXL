@@ -60,13 +60,11 @@ class Callmanager
         $this->SOAPCLIENT = new \SoapClient($SCHEMA, $OPTIONS);
         $this->SOAPCALLS = [];
     }
-	
 
     // Keep track of our soap calls for performance and debugging
 
     private function log_soap_call($CALL, $TIME, $QUERY, $REPLY)
     {
-		
         array_push($this->SOAPCALLS,
                     [
                         'call'     => $CALL,
@@ -77,19 +75,18 @@ class Callmanager
             );
 
         return count($this->SOAPCALLS);
-		
     }
-	
-	public function microtimeTicks()
+
+    public function microtimeTicks()
     {
         // Turn microtime into an array (12345 0.7563262)
         $ticks = explode(' ', microtime());
         // Return the sum of the two numbers (double precision number)
         return $ticks[0] + $ticks[1];
     }
-	
-	// This converts an object returned by a soap reply from StdClass to associative array
-	
+
+    // This converts an object returned by a soap reply from StdClass to associative array
+
     public function object_to_assoc($OBJECT)
     {
         return json_decode(json_encode($OBJECT), true);
@@ -175,20 +172,20 @@ class Callmanager
 
         return $RETURN;
     }
-	
-	// Including specific fields to return in the list function.
-	
-	public function list_all_phones_summary_by_site($SITE)
-    {	
-	$SEARCH = $this->axl_search_return_array(['devicePoolName' => "%{$SITE}%"], [
-																	'name' => '', 
-																	'description' => '', 
-																	'product' => '', 
-																	'callingSearchSpaceName' => '',
-																	'devicePoolName' => '',
-																	'locationName' => '',
-																	'ownerUserName' => ''
-																]);
+
+    // Including specific fields to return in the list function.
+
+    public function list_all_phones_summary_by_site($SITE)
+    {
+        $SEARCH = $this->axl_search_return_array(['devicePoolName' => "%{$SITE}%"], [
+                                                                    'name'                   => '',
+                                                                    'description'            => '',
+                                                                    'product'                => '',
+                                                                    'callingSearchSpaceName' => '',
+                                                                    'devicePoolName'         => '',
+                                                                    'locationName'           => '',
+                                                                    'ownerUserName'          => '',
+                                                                ]);
         // Search the CUCM for phones from Site Device Pool
         $BASETIME = $this->microtimeTicks();
         $RETURN = $this->SOAPCLIENT->listPhone($SEARCH);
@@ -287,12 +284,12 @@ class Callmanager
 
         return $RETURN;
     }
-	
-	    // Get an array of route plans by some search string
+
+        // Get an array of route plans by some search string
 
     public function get_all_users()
     {
-        $SEARCH = $this->axl_search_return_array(['userid' => "%"],
+        $SEARCH = $this->axl_search_return_array(['userid' => '%'],
                                                  ['firstName' => '', 'lastName' => '', 'userid' => '', 'primaryExtension' => '']);
         // Search the CUCM for all device pools
         $BASETIME = $this->microtimeTicks();
@@ -307,8 +304,6 @@ class Callmanager
 
         return $RETURN;
     }
-	
-
 
     // Manage the list of types valid for our generalized dosomething_objecttypexyz_bysomething($1,$2)
 
@@ -343,7 +338,6 @@ class Callmanager
         return $TYPES;
     }
 
-	
     // Get an array of site names
 
     public function get_site_names()
