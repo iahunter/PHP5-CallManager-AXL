@@ -333,6 +333,8 @@ class Callmanager
                     'RoutePattern',
                     'TransPattern',
 					'ApplicationDialRules',
+					'CallingPartyTransformationPattern',
+					'CalledPartyTransformationPattern',
                     'DateTimeGroup',
                     'Phone',
                     'Line',
@@ -398,6 +400,14 @@ class Callmanager
             $RETR = ['pattern' => '', 'routePartitionName' => ''];
         // So does translation pattern search and returns a different field
         } elseif ($TYPE == 'TransPattern') {
+            $FIND = ['routePartitionName' => "%{$SITE}%"];
+            $RETR = ['pattern' => ''];
+		// So does CallingPartyTransformationPattern pattern search and returns a different field
+        } elseif ($TYPE == 'CallingPartyTransformationPattern') {
+            $FIND = ['routePartitionName' => "%{$SITE}%"];
+            $RETR = ['pattern' => ''];
+		// So does CalledPartyTransformationPattern pattern search and returns a different field
+        } elseif ($TYPE == 'CalledPartyTransformationPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
         }
