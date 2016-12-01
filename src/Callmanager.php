@@ -645,7 +645,7 @@ class Callmanager
         $FUNCTION = 'add'.$TYPE;
         $TYPE = lcfirst($TYPE);
         $QUERY = [$TYPE => $DATA];
-        print_r($QUERY);
+        //print_r($QUERY);
         $BASETIME = $this->microtimeTicks();
         $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
         $DIFFTIME = $this->microtimeTicks() - $BASETIME;
