@@ -327,9 +327,9 @@ class Callmanager
                     'RouteList',
                     'RoutePattern',
                     'TransPattern',
-                    'ApplicationDialRules',
-                    'CallingPartyTransformationPattern',
-                    'CalledPartyTransformationPattern',
+					'ApplicationDialRules',
+					'CallingPartyTransformationPattern',
+					'CalledPartyTransformationPattern',
                     'DateTimeGroup',
                     'Phone',
                     'Line',
@@ -396,11 +396,11 @@ class Callmanager
         } elseif ($TYPE == 'TransPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-        // So does CallingPartyTransformationPattern pattern search and returns a different field
+		// So does CallingPartyTransformationPattern pattern search and returns a different field
         } elseif ($TYPE == 'CallingPartyTransformationPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-        // So does CalledPartyTransformationPattern pattern search and returns a different field
+		// So does CalledPartyTransformationPattern pattern search and returns a different field
         } elseif ($TYPE == 'CalledPartyTransformationPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
@@ -451,6 +451,41 @@ class Callmanager
                 }
             }
         }
+
+        return $LINES;
+    }
+	
+	// Get Phone Line Details of the phone by Name
+	public function get_lines_details_by_phone_name($NAME)
+    {
+        // Get all the phone object uuid=>names for a given site (based on device pool)
+        $LINES = [];
+		
+        // get phone Line detailed object information
+		$PHONE = $this->get_object_type_by_name($NAME, 'Phone');
+		// if there are lines in the phone go get the uuid and name for each line dirn
+		if (isset($PHONE['lines']) && is_array($PHONE['lines']) && count($PHONE['lines'])) {
+			// loop through each line on the phone and suck out the uuid and dial pattern
+			foreach ($PHONE['lines'] as $PHONELINE) {
+				if (isset($PHONELINE['dirn']['pattern']) && $PHONELINE['dirn']['pattern'] && isset($PHONELINE['dirn']['uuid']) && $PHONELINE['dirn']['uuid']) {
+					// Phone has single linee
+					$UUID = $PHONELINE['dirn']['uuid'];
+					$LINE = $this->get_object_type_by_uuid($UUID, 'Line');
+					$LINES[$PHONELINE['dirn']['uuid']] = $LINE;
+				}else{
+					// Phone has multiple lines
+					foreach($PHONELINE as $SUBLINE){
+						if (isset($SUBLINE['dirn']['pattern']) && $SUBLINE['dirn']['pattern'] && isset($SUBLINE['dirn']['uuid']) && $SUBLINE['dirn']['uuid']) {
+							// Save this line to the list of site lines we return
+							//$LINES[$SUBLINE['dirn']['uuid']] = $SUBLINE['dirn']['pattern'];
+							$UUID = $SUBLINE['dirn']['uuid'];
+							$LINE = $this->get_object_type_by_uuid($UUID, 'Line');
+							$LINES[$SUBLINE['dirn']['uuid']] = $LINE;
+						}
+					}
+				}
+			}
+		}
 
         return $LINES;
     }
@@ -616,11 +651,11 @@ class Callmanager
                 }
             } else {
                 foreach ($OBJECTS[$STEP] as $UUID => $NAME) {
-                    echo "Attempting to delete object type {$STEP} name {$NAME} UUID {$UUID}\n";
+                    echo "Attempting to delete object type {$STEP} name {$NAME} UUID {$UUID}";
                     try {
                         $this->delete_object_type_by_uuid($UUID, $STEP);
                     } catch (\Exception $E) {
-                        echo "Error deleteing object! {$E->getmessage()}\n";
+                        echo "Error deleteing object! {$E->getmessage()}";
                     }
                 }
             }
