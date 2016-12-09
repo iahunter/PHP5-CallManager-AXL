@@ -562,18 +562,17 @@ class Callmanager
 
         return $RETURN;
     }
-	
-	
-	public function get_object_type_by_pattern_and_partition($PATTERN, $PARTITION, $TYPE)
+
+    public function get_object_type_by_pattern_and_partition($PATTERN, $PARTITION, $TYPE)
     {
-		// Type must be a member of the TYPES Array for this function 
-		
+        // Type must be a member of the TYPES Array for this function
+
         // Get our valid object types
         $TYPES = [
-					'TransPattern', 
-					'Line',
-					'RoutePattern',
-				];
+                    'TransPattern',
+                    'Line',
+                    'RoutePattern',
+                ];
 
         // Check to see if the one we were passed is valid for this function
         if (!in_array($TYPE, $TYPES)) {
@@ -768,22 +767,23 @@ class Callmanager
         $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
         $RETURN = $this->object_to_assoc($RETURN);
         $RETURN = reset($RETURN);
+
         return $RETURN;
     }
-	
-	public function update_object_type_by_pattern_and_partition($DATA, $TYPE)
+
+    public function update_object_type_by_pattern_and_partition($DATA, $TYPE)
     {
-		if (!$DATA['pattern']) {
-            throw new \Exception("No Pattern set");
-		}else{
-			$PATTERN = $DATA['pattern'];
-		}
-		
-		if (!$DATA['routePartitionName']){
-			throw new \Exception("No Partition set");
-        }else{
-			$PARTITION = $DATA['routePartitionName'];
-		}
+        if (!$DATA['pattern']) {
+            throw new \Exception('No Pattern set');
+        } else {
+            $PATTERN = $DATA['pattern'];
+        }
+
+        if (!$DATA['routePartitionName']) {
+            throw new \Exception('No Partition set');
+        } else {
+            $PARTITION = $DATA['routePartitionName'];
+        }
 
         // Get our valid object types
         $TYPES = $this->object_types();
