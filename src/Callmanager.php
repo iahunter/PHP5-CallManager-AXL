@@ -174,15 +174,15 @@ class Callmanager
         }
     }
 
-    public function get_ldap_sync_status()
+    public function get_ldap_sync_status($NAME)
     {
-
+		$SEARCH = ['name' => $NAME];
         // Search the CUCM for all phones
         $BASETIME = $this->microtimeTicks();
-        $RETURN = $this->SOAPCLIENT->getLdapSync();
+        $RETURN = $this->SOAPCLIENT->getLdapSyncStatus($SEARCH);
         $DIFFTIME = $this->microtimeTicks() - $BASETIME;
         // log our soap call
-        $this->log_soap_call('getLdapSync', $DIFFTIME, $RETURN);
+        $this->log_soap_call('getLdapSyncStatus', $DIFFTIME, $SEARCH, $RETURN);
 
         if (!is_object($RETURN)) {
             throw new \Exception('SOAP reply is not an object');
