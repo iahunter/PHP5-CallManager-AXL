@@ -155,27 +155,26 @@ class Callmanager
                     ];
     }
 
-    
-	// Kick off LDAP Sync Process in CUCM - Name of LDAP Dirctory and true to start or false to stop. 
-	
-	public function do_ldap_sync($NAME, $BOOLEAN)
+    // Kick off LDAP Sync Process in CUCM - Name of LDAP Dirctory and true to start or false to stop.
+
+    public function do_ldap_sync($NAME, $BOOLEAN)
     {
-		$SEARCH = ['name' => $NAME, 'sync' => $BOOLEAN];
+        $SEARCH = ['name' => $NAME, 'sync' => $BOOLEAN];
         // Search the CUCM for all phones
         $BASETIME = $this->microtimeTicks();
         $RETURN = $this->SOAPCLIENT->doLdapSync($SEARCH);
         $DIFFTIME = $this->microtimeTicks() - $BASETIME;
         // log our soap call
         $this->log_soap_call('doLdapSync', $DIFFTIME, $SEARCH, $RETURN);
-        
-		if (!is_object($RETURN)) {
+
+        if (!is_object($RETURN)) {
             throw new \Exception('SOAP reply is not an object');
-        }else{
-			return $RETURN;
-		}
+        } else {
+            return $RETURN;
+        }
     }
-	
-	public function get_ldap_sync_status()
+
+    public function get_ldap_sync_status()
     {
 
         // Search the CUCM for all phones
@@ -192,9 +191,9 @@ class Callmanager
         }
     }
 
-	// Get a complete list of the names of all phones
-    
-	public function get_phone_names()
+    // Get a complete list of the names of all phones
+
+    public function get_phone_names()
     {
         $SEARCH = $this->axl_search_return_array(['devicePoolName' => '%'], ['name' => '']);
         // Search the CUCM for all phones
@@ -534,17 +533,17 @@ class Callmanager
         // Get our valid object types
         $TYPES = $this->object_types();
 
-        // Do not get these objects by site. - They need to be requested directly. 
-		$DISCARD_TYPES = [
-					'Phone',
-					'Line',
-					];
-			
+        // Do not get these objects by site. - They need to be requested directly.
+        $DISCARD_TYPES = [
+                    'Phone',
+                    'Line',
+                    ];
+
         $RETURN = [];
         foreach ($TYPES as $TYPE) {
-			if (in_array($TYPE, $DISCARD_TYPES)){
-				continue;
-			}
+            if (in_array($TYPE, $DISCARD_TYPES)) {
+                continue;
+            }
             if (php_sapi_name() === 'cli') {
                 //print "Getting {$SITE}s {$TYPE}...".PHP_EOL;
             }
