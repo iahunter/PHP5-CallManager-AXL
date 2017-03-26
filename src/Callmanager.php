@@ -565,9 +565,18 @@ class Callmanager
     {
         // Get our valid object types
         $TYPES = $this->object_types();
+		// Do not get these objects by site. - They need to be requested directly. 
+		$DISCARD_TYPES = [
+					'Phone',
+					'Line',
+					];
+			
         $RETURN = [];
         foreach ($TYPES as $TYPE) {
-            try {
+			if (in_array($TYPE, $DISCARD_TYPES)){
+				continue;
+			}
+			try{
                 $RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
                 foreach ($RETURN[$TYPE] as $INDEX => $NAME) {
                     unset($RETURN[$TYPE][$INDEX]);
