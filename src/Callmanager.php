@@ -547,9 +547,10 @@ class Callmanager
             if (php_sapi_name() === 'cli') {
                 //print "Getting {$SITE}s {$TYPE}...".PHP_EOL;
             }
+			/*
             if ($TYPE == 'Line') {
                 continue;
-            }
+            }*/
             try {
                 $RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
             } catch (\Exception $E) {
