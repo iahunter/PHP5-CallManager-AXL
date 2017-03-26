@@ -176,7 +176,7 @@ class Callmanager
 
     public function get_ldap_sync_status($NAME)
     {
-		$SEARCH = ['name' => $NAME];
+        $SEARCH = ['name' => $NAME];
         // Search the CUCM for all phones
         $BASETIME = $this->microtimeTicks();
         $RETURN = $this->SOAPCLIENT->getLdapSyncStatus($SEARCH);
