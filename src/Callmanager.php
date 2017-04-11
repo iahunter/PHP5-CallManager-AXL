@@ -354,7 +354,6 @@ class Callmanager
                     'Location',
                     'Region',
                     'CallManagerGroup',
-                    'DevicePool',
                     'ConferenceBridge',
                     'Mtp',
                     'MediaResourceGroup',
@@ -370,6 +369,7 @@ class Callmanager
                     'DateTimeGroup',
                     'Phone',
                     'Line',
+					'CtiRoutePoint',
                 ];
 
         return $TYPES;
@@ -537,6 +537,7 @@ class Callmanager
         $DISCARD_TYPES = [
                     'Phone',
                     'Line',
+					'CtiRoutePoint',
                     ];
 
         $RETURN = [];
@@ -569,6 +570,7 @@ class Callmanager
         $DISCARD_TYPES = [
                     'Phone',
                     'Line',
+					'CtiRoutePoint',
                     ];
 
         $RETURN = [];
