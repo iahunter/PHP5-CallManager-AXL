@@ -369,7 +369,7 @@ class Callmanager
                     'DateTimeGroup',
                     'Phone',
                     'Line',
-					'CtiRoutePoint',
+                    'CtiRoutePoint',
                 ];
 
         return $TYPES;
@@ -537,7 +537,7 @@ class Callmanager
         $DISCARD_TYPES = [
                     'Phone',
                     'Line',
-					'CtiRoutePoint',
+                    'CtiRoutePoint',
                     ];
 
         $RETURN = [];
@@ -570,7 +570,7 @@ class Callmanager
         $DISCARD_TYPES = [
                     'Phone',
                     'Line',
-					'CtiRoutePoint',
+                    'CtiRoutePoint',
                     ];
 
         $RETURN = [];
