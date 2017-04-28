@@ -304,7 +304,7 @@ class Callmanager
 
     // Get an array of route plans by some search string
 
-    public function get_route_plan_by_name($pattern, $partition = 'Global-All-Lines')
+    public function get_route_plan_by_name($pattern, $partition = '%')
     {
         $SEARCH = $this->axl_search_return_array(['dnOrPattern' => $pattern, 'partition' => $partition],
                                                  ['dnOrPattern' => '', 'partition' => '', 'type' => '', 'routeDetail' => '']);
