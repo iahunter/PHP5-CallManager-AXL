@@ -370,7 +370,7 @@ class Callmanager
                     'Phone',
                     'Line',
                     'CtiRoutePoint',
-					'HuntPilot',
+                    'HuntPilot',
                 ];
 
         return $TYPES;
@@ -423,7 +423,7 @@ class Callmanager
         // Phone search uses a different search name field
         if ($TYPE == 'Phone') {
             $FIND = ['devicePoolName' => "%{$SITE}%"];
-		}elseif ($TYPE == 'CtiRoutePoint') {
+        } elseif ($TYPE == 'CtiRoutePoint') {
             $FIND = ['devicePoolName' => "%{$SITE}%"];
         // H323 Gateway search uses a different search name field
         } elseif ($TYPE == 'H323Gateway') {
@@ -444,8 +444,7 @@ class Callmanager
         } elseif ($TYPE == 'CalledPartyTransformationPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-        }
-		 elseif ($TYPE == 'HuntPilot') {
+        } elseif ($TYPE == 'HuntPilot') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
         }
@@ -834,8 +833,8 @@ class Callmanager
 
         return $RETURN;
     }
-	
-	public function update_object_type_by_uuid_assoc($DATA, $TYPE)
+
+    public function update_object_type_by_uuid_assoc($DATA, $TYPE)
     {
         // Get our valid object types
         $TYPES = $this->object_types();
