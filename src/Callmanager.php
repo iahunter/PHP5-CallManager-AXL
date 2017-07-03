@@ -370,6 +370,7 @@ class Callmanager
                     'Phone',
                     'Line',
                     'CtiRoutePoint',
+					'HuntPilot',
                 ];
 
         return $TYPES;
@@ -796,6 +797,54 @@ class Callmanager
         $NAME = $DATA[$NAMEFIELD];
         // Get their object information out of the database
         $OBJECT = $this->get_object_type_by_name($NAME, $TYPE);
+        //print "DUMP OF OBJECT WE FOUND TO EDIT:\n"; dumper($OBJECT);
+        // TODO: Make sure this is a valid object? Do some other checks?
+        // Force the query to use our name as search criteria
+        $QUERY = [$NAMEFIELD => $NAME];
+        // Loop through object keys and see if the value passed has changed
+        foreach ($OBJECT as $KEY => $VALUE) {
+            // Make sure the object key val pair is defined in the new data passed
+            // AND check if the value of the new data has changed from the original
+            if (isset($DATA[$KEY]) && $DATA[$KEY] != $VALUE) {
+                // Build our update query of different values
+                $QUERY[$KEY] = $DATA[$KEY];
+            } elseif (isset($DATA['addMembers'])) {
+                // Add it to query if the addMembersis set. This is for CSS updates
+                $QUERY['addMembers'] = $DATA['addMembers'];
+            } elseif (isset($DATA['removeMembers'])) {
+                // Add it to query if the removeMembers is set. This is for CSS updates
+                $QUERY['removeMembers'] = $DATA['removeMembers'];
+            }
+        }
+        //print "QUERY CALCULATED ON OBJECT TO UPDATE:\n"; dumper($QUERY);
+        // Update our object
+        $FUNCTION = 'update'.$TYPE;
+        $BASETIME = $this->microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
+        $DIFFTIME = $this->microtimeTicks() - $BASETIME;
+        $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
+        $RETURN = $this->object_to_assoc($RETURN);
+        $RETURN = reset($RETURN);
+
+        return $RETURN;
+    }
+	
+	public function update_object_type_by_uuid_assoc($DATA, $TYPE)
+    {
+        // Get our valid object types
+        $TYPES = $this->object_types();
+        // Check to see if the one we were passed is valid for this function
+        if (!in_array($TYPE, $TYPES)) {
+            throw new \Exception("Object type provided {$TYPE} is not supported");
+        }
+        // There may be a case where the name is not actually called name
+        $NAMEFIELD = 'uuid';
+        if (!isset($DATA[$NAMEFIELD]) || !$DATA[$NAMEFIELD]) {
+            throw new \Exception('Data does not contain a valid uuid to update');
+        }
+        $NAME = $DATA[$NAMEFIELD];
+        // Get their object information out of the database
+        $OBJECT = $this->get_object_type_by_uuid($NAME, $TYPE);
         //print "DUMP OF OBJECT WE FOUND TO EDIT:\n"; dumper($OBJECT);
         // TODO: Make sure this is a valid object? Do some other checks?
         // Force the query to use our name as search criteria
