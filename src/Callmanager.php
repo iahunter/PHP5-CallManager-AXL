@@ -370,7 +370,7 @@ class Callmanager
                     'Phone',
                     'Line',
                     'CtiRoutePoint',
-					'HuntPilot',
+                    'HuntPilot',
                 ];
 
         return $TYPES;
@@ -828,8 +828,8 @@ class Callmanager
 
         return $RETURN;
     }
-	
-	public function update_object_type_by_uuid_assoc($DATA, $TYPE)
+
+    public function update_object_type_by_uuid_assoc($DATA, $TYPE)
     {
         // Get our valid object types
         $TYPES = $this->object_types();
