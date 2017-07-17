@@ -397,10 +397,10 @@ class Callmanager
         // Return our array of sites
         return $SITES;
     }
-
-    public function get_remoteDestinationProfiles()
+	
+	public function get_remoteDestinationProfiles()
     {
-        $SEARCH = $this->axl_search_return_array(['name' => '%'],
+		$SEARCH = $this->axl_search_return_array(['name' => '%'],
                                                  ['name' => '', 'model' => '', 'callingSearchSpaceName' => '', 'devicePoolName' => '', 'userId' => '', 'uuid' => '']);
         $BASETIME = $this->microtimeTicks();
         $RETURN = $this->SOAPCLIENT->listRemoteDestinationProfile($SEARCH);
@@ -414,10 +414,11 @@ class Callmanager
 
         return $RETURN;
     }
-
-    public function get_remoteDestinationProfilesbySite($SITE)
+	
+	public function get_remoteDestinationProfilesbySite($SITE)
     {
-        $SEARCH = $this->axl_search_return_array(['name' => '%'],
+       
+		$SEARCH = $this->axl_search_return_array(['name' => '%'],
                                                  ['name' => '', 'model' => '', 'callingSearchSpaceName' => '', 'devicePoolName' => '', 'userId' => '', 'uuid' => '']);
         $BASETIME = $this->microtimeTicks();
         $RETURN = $this->SOAPCLIENT->listRemoteDestinationProfile($SEARCH);
@@ -426,15 +427,15 @@ class Callmanager
         $this->log_soap_call('listRemoteDestinationProfile', $DIFFTIME, $SEARCH, $RETURN);
         // Decode the reply into an array of results
         $RETURN = $this->decode_soap_reply($RETURN);
-        $RETR = [];
-        //print_r($RETURN);
-        foreach ($RETURN as $RDP) {
-            //print_r($RDP['devicePoolName']);
-            //return $RDP;
-            if (preg_match("/{$SITE}/", $RDP['devicePoolName']['_'])) {
-                $RETR[] = $RDP;
-            }
-        }
+		$RETR = [];
+		
+		foreach($RETURN as $RDP){
+			//print_r($RDP['devicePoolName']);
+			//return $RDP;
+			if (preg_match("/{$SITE}/", $RDP['devicePoolName']['_'])){
+				$RETR[] = $RDP;
+			}
+		}
         // Turn the associative arrays into a single simensional array list
         $RETURN = $this->assoc_key_values_to_array($RETR, 'name');
 
@@ -469,9 +470,6 @@ class Callmanager
             $FIND = ['devicePoolName' => "%{$SITE}%"];
         } elseif ($TYPE == 'CtiRoutePoint') {
             $FIND = ['devicePoolName' => "%{$SITE}%"];
-        } elseif ($TYPE == 'RemoteDestinationProfile') {
-            $FIND = ['devicePoolName' => "%{$SITE}%"];
-        // H323 Gateway search uses a different search name field
         } elseif ($TYPE == 'H323Gateway') {
             $FIND = ['devicePoolName' => "%{$SITE}%"];
         // So does route pattern search and returns a different field - Need to search by specific Partition;
@@ -494,11 +492,10 @@ class Callmanager
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
         } elseif ($TYPE == 'RemoteDestinationProfile') {
-            $RETR = $this->get_remoteDestinationProfilesbySite($SITE);
-
-            return $RETR;
-        }
-
+			$RETR = $this->get_remoteDestinationProfilesbySite($SITE);
+			return $RETR;
+		}
+		
         $SEARCH = $this->axl_search_return_array($FIND, $RETR);
 
         $FUNCTION = 'list'.$TYPE;
