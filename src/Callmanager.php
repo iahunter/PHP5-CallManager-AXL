@@ -397,6 +397,51 @@ class Callmanager
         // Return our array of sites
         return $SITES;
     }
+	
+	public function get_remoteDestinationProfiles()
+    {
+       
+		$SEARCH = $this->axl_search_return_array(['name' => '%'],
+                                                 ['name' => '', 'model' => '', 'callingSearchSpaceName' => '', 'devicePoolName' => '', 'userId' => '', 'uuid' => '']);
+        $BASETIME = $this->microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->listRemoteDestinationProfile($SEARCH);
+        $DIFFTIME = $this->microtimeTicks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call('listRemoteDestinationProfile', $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN);
+        // Turn the associative arrays into a single simensional array list
+        $RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
+
+        return $RETURN;
+    }
+	
+	public function get_remoteDestinationProfilesbySite($SITE)
+    {
+       
+		$SEARCH = $this->axl_search_return_array(['name' => '%'],
+                                                 ['name' => '', 'model' => '', 'callingSearchSpaceName' => '', 'devicePoolName' => '', 'userId' => '', 'uuid' => '']);
+        $BASETIME = $this->microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->listRemoteDestinationProfile($SEARCH);
+        $DIFFTIME = $this->microtimeTicks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call('listRemoteDestinationProfile', $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN);
+		$RETR = [];
+		//print_r($RETURN);
+		foreach($RETURN as $RDP){
+			//print_r($RDP['devicePoolName']);
+			//return $RDP;
+			if(preg_match("/{$SITE}/", $RDP['devicePoolName']['_'])){
+				$RETR[] = $RDP;
+			}
+		}
+        // Turn the associative arrays into a single simensional array list
+        $RETURN = $this->assoc_key_values_to_array($RETR, 'name');
+
+        return $RETURN;
+    }
 
     // LIST STUFF IN SITES
 
@@ -450,7 +495,11 @@ class Callmanager
         } elseif ($TYPE == 'HuntPilot') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-        }
+        } elseif ($TYPE == 'RemoteDestinationProfile') {
+			$RETR = $this->get_remoteDestinationProfilesbySite($SITE);
+			return $RETR;
+		}
+		
         $SEARCH = $this->axl_search_return_array($FIND, $RETR);
 
         $FUNCTION = 'list'.$TYPE;
