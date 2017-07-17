@@ -426,6 +426,8 @@ class Callmanager
             $FIND = ['devicePoolName' => "%{$SITE}%"];
         } elseif ($TYPE == 'CtiRoutePoint') {
             $FIND = ['devicePoolName' => "%{$SITE}%"];
+		} elseif ($TYPE == 'RemoteDestinationProfile') {
+            $FIND = ['devicePoolName' => "%{$SITE}%"];
         // H323 Gateway search uses a different search name field
         } elseif ($TYPE == 'H323Gateway') {
             $FIND = ['devicePoolName' => "%{$SITE}%"];
