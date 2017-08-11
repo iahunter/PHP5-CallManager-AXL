@@ -867,9 +867,8 @@ class Callmanager
             } elseif (isset($DATA['removeMembers'])) {
                 // Add it to query if the removeMembers is set. This is for CSS updates
                 $QUERY['removeMembers'] = $DATA['removeMembers'];
-            }
-			elseif (isset($DATA['newName'])) {
-                // Add it to query if the newName is set. This is for name changes. 
+            } elseif (isset($DATA['newName'])) {
+                // Add it to query if the newName is set. This is for name changes.
                 $QUERY['newName'] = $DATA['newName'];
             }
         }
@@ -919,9 +918,8 @@ class Callmanager
             } elseif (isset($DATA['removeMembers'])) {
                 // Add it to query if the removeMembers is set. This is for CSS updates
                 $QUERY['removeMembers'] = $DATA['removeMembers'];
-            }
-			elseif (isset($DATA['newName'])) {
-                // Add it to query if the newName is set. This is for name changes. 
+            } elseif (isset($DATA['newName'])) {
+                // Add it to query if the newName is set. This is for name changes.
                 $QUERY['newName'] = $DATA['newName'];
             }
         }
