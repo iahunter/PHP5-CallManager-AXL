@@ -746,14 +746,26 @@ class Callmanager
         return $RETURN;
     }
 
-    public function delete_all_object_types_by_site($SITE)
+	public function delete_all_object_types_by_site($SITE)
     {
         // This works - but do not call it!
 /*		throw new \Exception("DO NOT CALL THIS FUNCTION");
         return;
 /**/
+
+		$RESULT = [];
+		
         // The order of this list is critical to successfully remove all the objects in a given site...
-        $ORDER = ['TransPattern',
+		
+        $ORDER = [	
+					
+					'RemoteDestinationProfile',
+					'HuntPilot',
+					'CtiRoutePoint',
+					'CalledPartyTransformationPattern',
+					'CallingPartyTransformationPattern',
+					'ApplicationDialRules',
+					'TransPattern',
                     'updateDevicePool',
                     'RouteGroup',
                     'H323Gateway',
@@ -790,15 +802,17 @@ class Callmanager
                 }
             } else {
                 foreach ($OBJECTS[$STEP] as $UUID => $NAME) {
-                    echo "Attempting to delete object type {$STEP} name {$NAME} UUID {$UUID}";
+                    //echo "Attempting to delete object type {$STEP} name {$NAME} UUID {$UUID}";
                     try {
-                        $this->delete_object_type_by_uuid($UUID, $STEP);
+                        $RESULT[$STEP][$UUID] = $this->delete_object_type_by_uuid($UUID, $STEP);
                     } catch (\Exception $E) {
-                        echo "Error deleteing object! {$E->getmessage()}";
+                        $RESULT[$STEP][$UUID] = "Error deleteing object! {$E->getmessage()}";
                     }
                 }
             }
         }
+		
+		return $RESULT;
     }
 
     // ADD STUFF
