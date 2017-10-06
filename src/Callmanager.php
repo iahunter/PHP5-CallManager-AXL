@@ -236,12 +236,12 @@ class Callmanager
 
         return $RETURN;
     }
-	
-	// Search Phone by Name
-	public function phone_search_by_name($NAME)
+
+    // Search Phone by Name
+    public function phone_search_by_name($NAME)
     {
-        $SEARCH = $this->axl_search_return_array(['name'	=> "%{$NAME}%"], [
-                                                                    'name'                   => "",
+        $SEARCH = $this->axl_search_return_array(['name'    => "%{$NAME}%"], [
+                                                                    'name'                   => '',
                                                                     'description'            => '',
                                                                     'product'                => '',
                                                                     'callingSearchSpaceName' => '',
@@ -262,22 +262,22 @@ class Callmanager
 
         return $RETURN;
     }
-	
-	// Search Phone by Key
-	public function phone_search($KEY, $SEARCH)
+
+    // Search Phone by Key
+    public function phone_search($KEY, $SEARCH)
     {
-		/*
-			$KEYS =
-				['name',
-				'description',
-				'protocol',
-				'callingSearchSpaceName',
-				'devicePoolName',
-				'securityProfileName']
-			
-		*/ 
-        $SEARCH = $this->axl_search_return_array([$KEY	=> "%{$SEARCH}%"], [
-                                                                    'name'                   => "",
+        /*
+            $KEYS =
+                ['name',
+                'description',
+                'protocol',
+                'callingSearchSpaceName',
+                'devicePoolName',
+                'securityProfileName']
+
+        */
+        $SEARCH = $this->axl_search_return_array([$KEY    => "%{$SEARCH}%"], [
+                                                                    'name'                   => '',
                                                                     'description'            => '',
                                                                     'product'                => '',
                                                                     'callingSearchSpaceName' => '',
@@ -384,7 +384,7 @@ class Callmanager
         return $RETURN;
     }
 
-        // Get an array of route plans by some search string
+    // Get an array of route plans by some search string
 
     public function get_all_users()
     {
@@ -533,19 +533,19 @@ class Callmanager
             $FIND = ['devicePoolName' => "%{$SITE}%"];
         } elseif ($TYPE == 'H323Gateway') {
             $FIND = ['devicePoolName' => "%{$SITE}%"];
-        // So does route pattern search and returns a different field - Need to search by specific Partition;
+            // So does route pattern search and returns a different field - Need to search by specific Partition;
         } elseif ($TYPE == 'RoutePattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => '', 'routePartitionName' => ''];
-        // So does translation pattern search and returns a different field
+            // So does translation pattern search and returns a different field
         } elseif ($TYPE == 'TransPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-        // So does CallingPartyTransformationPattern pattern search and returns a different field
+            // So does CallingPartyTransformationPattern pattern search and returns a different field
         } elseif ($TYPE == 'CallingPartyTransformationPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-        // So does CalledPartyTransformationPattern pattern search and returns a different field
+            // So does CalledPartyTransformationPattern pattern search and returns a different field
         } elseif ($TYPE == 'CalledPartyTransformationPattern') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
@@ -694,6 +694,7 @@ class Callmanager
             if (in_array($TYPE, $DISCARD_TYPES)) {
                 continue;
             }
+
             try {
                 $RETURN[$TYPE] = $this->get_object_type_by_site($SITE, $TYPE);
                 foreach ($RETURN[$TYPE] as $INDEX => $NAME) {
@@ -808,26 +809,26 @@ class Callmanager
         return $RETURN;
     }
 
-	public function delete_all_object_types_by_site($SITE)
+    public function delete_all_object_types_by_site($SITE)
     {
         // This works - but do not call it!
-/*		throw new \Exception("DO NOT CALL THIS FUNCTION");
-        return;
-/**/
+        /*		throw new \Exception("DO NOT CALL THIS FUNCTION");
+                return;
+        /**/
 
-		$RESULT = [];
-		
+        $RESULT = [];
+
         // The order of this list is critical to successfully remove all the objects in a given site...
-		
-        $ORDER = [	
-					
-					'RemoteDestinationProfile',
-					'HuntPilot',
-					'CtiRoutePoint',
-					'CalledPartyTransformationPattern',
-					'CallingPartyTransformationPattern',
-					'ApplicationDialRules',
-					'TransPattern',
+
+        $ORDER = [
+
+                    'RemoteDestinationProfile',
+                    'HuntPilot',
+                    'CtiRoutePoint',
+                    'CalledPartyTransformationPattern',
+                    'CallingPartyTransformationPattern',
+                    'ApplicationDialRules',
+                    'TransPattern',
                     'updateDevicePool',
                     'RouteGroup',
                     'H323Gateway',
@@ -873,8 +874,8 @@ class Callmanager
                 }
             }
         }
-		
-		return $RESULT;
+
+        return $RESULT;
     }
 
     // ADD STUFF
