@@ -236,6 +236,68 @@ class Callmanager
 
         return $RETURN;
     }
+	
+	// Search Phone by Name
+	public function phone_search_by_name($NAME)
+    {
+        $SEARCH = $this->axl_search_return_array(['name'	=> "%{$NAME}%"], [
+                                                                    'name'                   => "",
+                                                                    'description'            => '',
+                                                                    'product'                => '',
+                                                                    'callingSearchSpaceName' => '',
+                                                                    'devicePoolName'         => '',
+                                                                    'locationName'           => '',
+                                                                    'ownerUserName'          => '',
+                                                                ]);
+        // Search the CUCM for phones from Site Device Pool
+        $BASETIME = $this->microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->listPhone($SEARCH);
+        $DIFFTIME = $this->microtimeTicks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call('listPhone', $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN);
+        // Turn the associative arrays into a single simensional array list
+        //$RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
+
+        return $RETURN;
+    }
+	
+	// Search Phone by Key
+	public function phone_search($KEY, $SEARCH)
+    {
+		/*
+			$KEYS =
+				['name',
+				'description',
+				'protocol',
+				'callingSearchSpaceName',
+				'devicePoolName',
+				'securityProfileName']
+			
+		*/ 
+        $SEARCH = $this->axl_search_return_array([$KEY	=> "%{$SEARCH}%"], [
+                                                                    'name'                   => "",
+                                                                    'description'            => '',
+                                                                    'product'                => '',
+                                                                    'callingSearchSpaceName' => '',
+                                                                    'devicePoolName'         => '',
+                                                                    'locationName'           => '',
+                                                                    'ownerUserName'          => '',
+                                                                ]);
+        // Search the CUCM for phones from Site Device Pool
+        $BASETIME = $this->microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->listPhone($SEARCH);
+        $DIFFTIME = $this->microtimeTicks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call('listPhone', $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN);
+        // Turn the associative arrays into a single simensional array list
+        //$RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
+
+        return $RETURN;
+    }
 
     // Get all the information regarding one specific phone by name
 
