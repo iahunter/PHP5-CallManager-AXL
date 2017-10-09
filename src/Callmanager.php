@@ -221,7 +221,7 @@ class Callmanager
                                                                     'callingSearchSpaceName' => '',
                                                                     'devicePoolName'         => '',
                                                                     'locationName'           => '',
-																	'phoneTemplateName'      => '',
+                                                                    'phoneTemplateName'      => '',
                                                                     'ownerUserName'          => '',
                                                                 ]);
         // Search the CUCM for phones from Site Device Pool
@@ -248,7 +248,7 @@ class Callmanager
                                                                     'callingSearchSpaceName' => '',
                                                                     'devicePoolName'         => '',
                                                                     'locationName'           => '',
-																	'phoneTemplateName'      => '',
+                                                                    'phoneTemplateName'      => '',
                                                                     'ownerUserName'          => '',
                                                                 ]);
         // Search the CUCM for phones from Site Device Pool
