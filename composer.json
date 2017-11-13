@@ -32,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "CallmanagerAXL\\": "src"
+            "Iahunter\\": "src"
         }
     }
 }
