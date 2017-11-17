@@ -436,6 +436,7 @@ class Callmanager
                     'CtiRoutePoint',
                     'HuntPilot',
                     'RemoteDestinationProfile',
+					'CallPark'
                 ];
 
         return $TYPES;
@@ -554,6 +555,10 @@ class Callmanager
         } elseif ($TYPE == 'HuntPilot') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
+		} elseif ($TYPE == 'CallPark') {
+            $FIND = ['routePartitionName' => "%{$SITE}%"];
+            $RETR = ['pattern' => ''];
+        }
         } elseif ($TYPE == 'RemoteDestinationProfile') {
             $RETR = $this->get_remoteDestinationProfilesbySite($SITE);
 
