@@ -23,7 +23,7 @@ $USER   = "username";
 $PASS   = "password";
 
 try {
-    $CUCM = new \CallmanagerAXL\Callmanager($URL, $SCHEMA, $USER, $PASS);
+    $CUCM = new \Iahunter\\CallmanagerAXL\Callmanager($URL, $SCHEMA, $USER, $PASS);
     
     $DP = $CUCM->get_device_pool_names();        
     print_r($DP);                                          
@@ -44,8 +44,8 @@ $USER   = "username";
 $PASS   = "password";
 
 try {
-    $CUCM = new \CallmanagerAXL\Callmanager($URL, $SCHEMA, $USER, $PASS);
-    
+    $CUCM = new \Iahunter\CallmanagerAXL\Callmanager($URL, $SCHEMA, $USER, $PASS);
+
     $PHONES = $CUCM->get_phone_names();        
     print_r($PHONES);                                          
 
