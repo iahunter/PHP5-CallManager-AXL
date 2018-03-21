@@ -844,7 +844,7 @@ class Callmanager
         // The order of this list is critical to successfully remove all the objects in a given site...
 
         $ORDER = [
-
+					'CallPark',
                     'RemoteDestinationProfile',
                     'HuntPilot',
                     'CtiRoutePoint',
@@ -853,6 +853,8 @@ class Callmanager
                     'ApplicationDialRules',
                     'TransPattern',
                     'updateDevicePool',
+					'RoutePattern',
+					'RouteList',
                     'RouteGroup',
                     'H323Gateway',
                     'MediaResourceList',
