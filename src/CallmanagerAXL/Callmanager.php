@@ -574,7 +574,6 @@ class Callmanager
 		} elseif ($TYPE == 'CallPark') {
             $FIND = ['routePartitionName' => "%{$SITE}%"];
             $RETR = ['pattern' => ''];
-        }
         } elseif ($TYPE == 'RemoteDestinationProfile') {
             $RETR = $this->get_remoteDestinationProfilesbySite($SITE);
 
