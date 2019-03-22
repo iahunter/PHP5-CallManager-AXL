@@ -1,4 +1,4 @@
-# PHP5-CallManager-AXL
+# PHP7-CallManager-AXL
 PHP Implementation to interface with Cisco unified call manager (CUCM) over the administrative XML (AXL) implememtation.
 This library requires a copy of the CORRECT .WSDL file for YOUR VERSION of callmanager.
 This library is under development so should be considered unstable and subject to major changes.
