@@ -421,6 +421,49 @@ class Callmanager
 
         return $RETURN;
     }
+	
+		
+	public function list_all_usernames()
+    {
+        $SEARCH = $this->axl_search_return_array(['userid' => '%'],
+                                                 ['userid' => '']);
+        // Search the CUCM for all device pools
+        $BASETIME = $this->microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->listUser($SEARCH);
+        $DIFFTIME = $this->microtimeTicks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call('listUser', $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN);
+        // Turn the associative arrays into a single simensional array list
+        //$RETURN = $this->assoc_key_values_to_array($RETURN, 'name');
+
+        return $RETURN;
+    }
+	
+	
+	public function get_user_by_username($USERNAME)
+    {
+        $SEARCH = ['userid' => $USERNAME];
+		
+        $BASETIME = $this->microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->getUser($SEARCH);
+        $DIFFTIME = $this->microtimeTicks() - $BASETIME;
+        // log our soap call
+        $this->log_soap_call('getUser', $DIFFTIME, $SEARCH, $RETURN);
+        // Decode the reply into an array of results
+        $RETURN = $this->decode_soap_reply($RETURN); 
+        // Count the number of replies we recieved...
+        $COUNT = count($RETURN);
+        // It should be EXACTLY one result
+        if ($COUNT !== 1) {
+            throw new \Exception("Search returned {$COUNT} results, not exactly 1 as expected");
+        }
+        // Strip off the outer array
+        $RETURN = reset($RETURN);
+
+        return $RETURN;
+    }
 
     // Manage the list of types valid for our generalized dosomething_objecttypexyz_bysomething($1,$2)
 
