@@ -465,6 +465,24 @@ class Callmanager
         return $RETURN;
     }
 
+	public function add_user($DATA)
+    {
+		$TYPE = "User"; 
+        // Only the FIRST letter in the type needs to be lower case
+        // so we cant do $TYPE = strtolower($TYPE);
+        $FUNCTION = 'add'.$TYPE;
+        $TYPE = lcfirst($TYPE);
+        $QUERY = [$TYPE => $DATA];
+        //print_r($QUERY);
+        $BASETIME = $this->microtimeTicks();
+        $RETURN = $this->SOAPCLIENT->$FUNCTION($QUERY);
+        $DIFFTIME = $this->microtimeTicks() - $BASETIME;
+        $this->log_soap_call($FUNCTION, $DIFFTIME, $QUERY, $RETURN);
+        $RETURN = $this->object_to_assoc($RETURN);
+        $RETURN = reset($RETURN);
+        return $RETURN;
+    }
+	
     // Manage the list of types valid for our generalized dosomething_objecttypexyz_bysomething($1,$2)
 
     public function object_types()
